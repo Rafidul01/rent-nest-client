@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
         hostname: "encrypted-tbn0.gstatic.com"
       },
       {
-        hostname: "example.com"
+        hostname: "images.unsplash.com"
       }
     ]
   }

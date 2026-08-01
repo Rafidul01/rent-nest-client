@@ -20,7 +20,7 @@ export function ProductCard() {
         alt="Aurora Pro wireless over-ear headphones"
         width={640}
         height={480}
-        className="aspect-[4/3] w-full object-cover"
+        className="w-full object-cover"
       />
       <CardHeader>
         <div className="flex items-center justify-between gap-2">
