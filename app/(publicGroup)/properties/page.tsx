@@ -1,7 +1,7 @@
 // app/(public)/properties/page.tsx
 import { getProperties } from "./_actions/getProperties";
 import PropertyGrid from "./_components/PropertyGrid";
-// import FilterSidebar from "./_components/FilterSidebar";
+import FilterSidebar from "./_components/FilterSidebar";
 import { Separator } from "@/components/ui/separator";
 
 interface PropertiesPageProps {
@@ -31,7 +31,7 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <aside className="md:col-span-1">
-                    {/* <FilterSidebar /> */}
+                    <FilterSidebar />
                 </aside>
 
                 <main className="md:col-span-3">

@@ -7,25 +7,13 @@ import { Navbar } from "./components/shared/navbar";
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 
-export default async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  
-  return (
-    <html
-      lang="en"
-      className={cn("h-full antialiased", "font-sans", inter.variable)}
-    >
-      <body className="min-h-full flex flex-col">
-
-
-        <Navbar />
-        {children}
-
-        {/* Footer */}
-      </body>
-    </html>
-  );
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+    return (
+        <html lang="en" className="h-full antialiased">
+            <body className="min-h-full flex flex-col" suppressHydrationWarning>
+                <Navbar />
+                {children}
+            </body>
+        </html>
+    );
 }
