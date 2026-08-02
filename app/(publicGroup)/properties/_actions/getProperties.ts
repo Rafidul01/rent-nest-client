@@ -1,4 +1,4 @@
-// app/(public)/properties/_actions/getProperties.ts
+
 import { ApiSuccessResponse, Property } from "@/app/lib/types";
 
 interface GetPropertiesParams {

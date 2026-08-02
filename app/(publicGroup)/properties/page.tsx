@@ -1,4 +1,4 @@
-// app/(public)/properties/page.tsx
+
 import { getProperties } from "./_actions/getProperties";
 import PropertyGrid from "./_components/PropertyGrid";
 import FilterSidebar from "./_components/FilterSidebar";

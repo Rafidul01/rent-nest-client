@@ -1,4 +1,4 @@
-// app/(public)/properties/_components/PropertyGrid.tsx
+
 import { Property } from "@/app/lib/types";
 import PropertyCard from "./PropertyCard";
 
