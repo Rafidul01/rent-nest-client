@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 
 import "./globals.css";
 import { Navbar } from "./components/shared/navbar";
+import { Toaster } from "sonner";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body className="min-h-full flex flex-col" suppressHydrationWarning>
                 <Navbar />
                 {children}
+                 <Toaster />
             </body>
         </html>
     );
