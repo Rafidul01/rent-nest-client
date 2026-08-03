@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
 import { loginAction } from "../_actions/authActions";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const [state, action, pending] = useActionState(loginAction, {
@@ -19,9 +20,12 @@ export default function LoginForm() {
     message: "",
   });
 
+  const router = useRouter()
+
   useEffect(() => {
     if (state.success) {
       toast.success(state.message);
+      router.push("/")
     }
 
     if (state.errorDetails) {

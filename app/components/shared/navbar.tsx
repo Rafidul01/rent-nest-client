@@ -40,6 +40,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { UserData } from "@/app/lib/types"
+import { logout } from "@/service/logout"
+import { toast } from "sonner"
 
 const routes = [
   { label: "Home", href: "/", icon: Home },
@@ -48,11 +51,7 @@ const routes = [
   { label: "Contact", href: "/contact", icon: Phone },
 ]
 
-const user = {
-  name: "Amelia Carter",
-  email: "amelia@rentnest.com",
-  avatar: "/images/user-avatar.png",
-}
+
 
 const profileMenu = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -74,8 +73,16 @@ function Logo() {
   )
 }
 
-export function Navbar() {
+export function Navbar({user} : {user: UserData}) {
   const [open, setOpen] = useState(false)
+
+  const handleLogout = async () => {
+    await logout();
+    window.location.href = "/login";
+    toast.success("Logout successful");
+  };
+
+  
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur">
@@ -99,7 +106,8 @@ export function Navbar() {
           ))}
         </ul>
 
-        <div className="flex items-center gap-2">
+        {
+          user.success ? <div className="flex items-center gap-2">
           {/* Profile */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -108,7 +116,7 @@ export function Navbar() {
                 aria-label="Open user menu"
               >
                 <Avatar className="size-9">
-                  <AvatarImage src={user.avatar} />
+                  <AvatarImage src={user.data.role} />
                   <AvatarFallback>AC</AvatarFallback>
                 </Avatar>
               </button>
@@ -117,9 +125,9 @@ export function Navbar() {
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>
                 <div className="flex flex-col">
-                  <span>{user.name}</span>
+                  <span>{user.data.name}</span>
                   <span className="text-xs text-muted-foreground">
-                    {user.email}
+                    {user.data.email}
                   </span>
                 </div>
               </DropdownMenuLabel>
@@ -144,6 +152,7 @@ export function Navbar() {
 
               <DropdownMenuItem
                 className="text-red-500"
+                onSelect={handleLogout}
                 onClick={() => console.log("Logout")}
               >
                 <LogOut className="mr-2 h-4 w-4" />
@@ -186,7 +195,8 @@ export function Navbar() {
               </div>
             </SheetContent>
           </Sheet>
-        </div>
+        </div> : <Button ><Link href="/login">Login</Link></Button>
+        }
       </nav>
     </header>
   )

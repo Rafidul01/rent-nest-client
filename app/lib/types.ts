@@ -6,6 +6,14 @@ export type RentalStatus = "PENDING" | "APPROVED" | "REJECTED" | "ACTIVE" | "COM
 export type PaymentStatus = "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED";
 export type PaymentProvider = "STRIPE" | "SSLCOMMERZ";
 
+export interface UserData {
+    success: boolean;
+    statusCode: number;
+    message: string;
+    data: User;
+
+}
+
 export interface User {
     id: string;
     name: string;

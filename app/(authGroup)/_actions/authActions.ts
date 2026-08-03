@@ -30,16 +30,17 @@ export const loginAction = async (
             errorDetails: result.errorDetails ?? null,
         };
     }
+
     
     if(result.success){
         const cookieStore = await cookies();
-        cookieStore.set("accessToken", result.token,{
+        cookieStore.set("accessToken", result.data.accessToken,{
             httpOnly: true,
             sameSite: "lax",
             maxAge: 60 * 60 * 24,
 
         });
-        cookieStore.set("refreshToken", result.refreshToken,{
+        cookieStore.set("refreshToken", result.data.refreshToken,{
             httpOnly: true,
             sameSite: "lax",
             maxAge: 60 * 60 * 24 * 7,
