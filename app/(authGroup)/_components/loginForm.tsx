@@ -93,10 +93,10 @@ export default function LoginForm() {
           <FieldDescription className="text-center">
             Don&apos;t have an account?{" "}
             <Link
-              href="/signup"
+              href="/register"
               className="font-medium text-primary hover:underline"
             >
-              Sign up
+              Register
             </Link>
           </FieldDescription>
         </FieldGroup>

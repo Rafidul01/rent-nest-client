@@ -10,7 +10,6 @@ import {
   Menu,
   LayoutDashboard,
   User,
-  Settings,
   LogOut,
 } from "lucide-react"
 
@@ -51,13 +50,19 @@ const routes = [
   { label: "Contact", href: "/contact", icon: Phone },
 ]
 
+function getProfileMenu(role: UserData["data"]["role"]) {
+    const basePath =
+        role === "ADMIN" ? "/admin-dashboard"
+        : role === "LANDLORD" ? "/landlord-dashboard"
+        : "/tenant-dashboard";
+
+    return [
+        { label: "Dashboard", href: basePath, icon: LayoutDashboard },
+        { label: "Profile", href: `${basePath}/profile`, icon: User },
+    ];
+}
 
 
-const profileMenu = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Profile", href: "/profile", icon: User },
-  { label: "Settings", href: "/settings", icon: Settings },
-]
 
 function Logo() {
   return (
@@ -81,6 +86,8 @@ export function Navbar({user} : {user: UserData}) {
     window.location.href = "/login";
     toast.success("Logout successful");
   };
+
+  const profileMenu = user.success ? getProfileMenu(user.data.role) : [];
 
   
 
