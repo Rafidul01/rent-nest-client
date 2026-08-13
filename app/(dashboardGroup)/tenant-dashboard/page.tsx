@@ -1,184 +1,289 @@
-
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Clock3,
+  FileText,
+  Home,
+  MoveUpRight,
+  Wallet,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FileText, Home, Clock, Wallet, ArrowRight } from "lucide-react";
-import { getMyRentals } from "./_actions/getMyRentals";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { getMyPayments } from "./_actions/getMyPayments";
+import { getMyRentals } from "./_actions/getMyRentals";
 import { RentalRequest } from "@/app/lib/types";
 
-const statusVariant: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-    PENDING: "outline",
-    APPROVED: "secondary",
-    REJECTED: "destructive",
-    ACTIVE: "default",
-    COMPLETED: "secondary",
-    CANCELLED: "destructive",
+const statusVariant: Record<
+  string,
+  "default" | "secondary" | "destructive" | "outline"
+> = {
+  PENDING: "outline",
+  APPROVED: "secondary",
+  REJECTED: "destructive",
+  ACTIVE: "default",
+  COMPLETED: "secondary",
+  CANCELLED: "destructive",
 };
 
+const statCards = [
+  {
+    label: "Total requests",
+    icon: FileText,
+    key: "requests",
+    description: "All applications submitted",
+  },
+  {
+    label: "Active rentals",
+    icon: Home,
+    key: "active",
+    description: "Homes currently rented",
+  },
+  {
+    label: "Pending review",
+    icon: Clock3,
+    key: "pending",
+    description: "Awaiting a decision",
+  },
+  {
+    label: "Total spent",
+    icon: Wallet,
+    key: "spent",
+    description: "Completed payments",
+  },
+] as const;
+
 export default async function TenantDashboardPage() {
-    const [rentalsRes, paymentsRes] = await Promise.all([
-        getMyRentals(),
-        getMyPayments(),
-    ]);
+  const [rentalsRes, paymentsRes] = await Promise.all([
+    getMyRentals(),
+    getMyPayments(),
+  ]);
 
-    const rentals = rentalsRes.data;
-    const payments = paymentsRes.data;
+  const rentals = rentalsRes.data;
+  const payments = paymentsRes.data;
+  const totalRequests = rentals.length;
+  const activeCount = rentals.filter((r) => r.status === "ACTIVE").length;
+  const pendingCount = rentals.filter((r) => r.status === "PENDING").length;
+  const totalSpent = payments
+    .filter((p) => p.status === "COMPLETED")
+    .reduce((sum, p) => sum + p.amount, 0);
+  const needsPayment = rentals.filter((r) => r.status === "APPROVED");
+  const needsReview = rentals.filter((r) => r.status === "ACTIVE");
+  const recentRentals = [...rentals]
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    )
+    .slice(0, 5);
 
-    console.log(rentals);
+  const values = {
+    requests: totalRequests,
+    active: activeCount,
+    pending: pendingCount,
+    spent: `৳${totalSpent.toLocaleString()}`,
+  };
 
-    const totalRequests = rentals.length;
-    const activeCount = rentals.filter((r) => r.status === "ACTIVE").length;
-    const pendingCount = rentals.filter((r) => r.status === "PENDING").length;
-    const totalSpent = payments
-        .filter((p) => p.status === "COMPLETED")
-        .reduce((sum, p) => sum + p.amount, 0);
-
-    const needsPayment = rentals.filter((r) => r.status === "APPROVED");
-    const needsReview = rentals.filter((r) => r.status === "ACTIVE");
-
-    const recentRentals = [...rentals]
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-        .slice(0, 5);
-
-    return (
-        <div className="space-y-8">
-            <div>
-                <h1 className="text-2xl font-semibold">Overview</h1>
-                <p className="text-muted-foreground text-sm mt-1">
-                    Here&apos;s a snapshot of your rental activity.
-                </p>
+  return (
+    <div className="flex flex-col gap-8">
+      <section className="relative overflow-hidden rounded-3xl border bg-primary px-6 py-7 text-primary-foreground shadow-sm sm:px-8 sm:py-9">
+        <div className="relative z-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex max-w-xl flex-col gap-3">
+            <Badge className="w-fit border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/15">
+              Tenant dashboard
+            </Badge>
+            <div className="flex flex-col gap-2">
+              <h1 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
+                Your rental journey, at a glance.
+              </h1>
+              <p className="max-w-lg text-pretty text-sm leading-6 text-primary-foreground/75 sm:text-base">
+                Track applications, manage active homes, and stay on top of
+                every payment in one calm place.
+              </p>
             </div>
+          </div>
 
-            {/* Stat cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">
-                            Total Requests
-                        </CardTitle>
-                        <FileText className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-2xl font-bold">{totalRequests}</p>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">
-                            Active Rentals
-                        </CardTitle>
-                        <Home className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-2xl font-bold">{activeCount}</p>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">
-                            Pending
-                        </CardTitle>
-                        <Clock className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-2xl font-bold">{pendingCount}</p>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">
-                            Total Spent
-                        </CardTitle>
-                        <Wallet className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-2xl font-bold">৳{totalSpent.toLocaleString()}</p>
-                    </CardContent>
-                </Card>
-            </div>
-
-            {/* Needs attention */}
-            {(needsPayment.length > 0 || needsReview.length > 0) && (
-                <div>
-                    <h2 className="text-lg font-semibold mb-3">Needs Your Attention</h2>
-                    <div className="space-y-3">
-                        {needsPayment.map((r) => (
-                            <Card key={r.id}>
-                                <CardContent className="flex items-center justify-between py-4">
-                                    <div>
-                                        <p className="font-medium">{r.property?.title}</p>
-                                        <p className="text-sm text-muted-foreground">
-                                            Approved — payment required to activate
-                                        </p>
-                                    </div>
-                                    <Button asChild size="sm">
-                                        <Link href={`/tenant-dashboard/requests/${r.id}/pay`}>
-                                            Pay Now
-                                        </Link>
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                        ))}
-
-                        {needsReview.map((r) => (
-                            <Card key={r.id}>
-                                <CardContent className="flex items-center justify-between py-4">
-                                    <div>
-                                        <p className="font-medium">{r.property?.title}</p>
-                                        <p className="text-sm text-muted-foreground">
-                                            Active — share your experience
-                                        </p>
-                                    </div>
-                                    <Button asChild size="sm" variant="outline">
-                                        <Link href={`/properties/${r.propertyId}`}>
-                                            Leave a Review
-                                        </Link>
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-            )}
-
-            {/* Recent requests */}
-            <div>
-                <div className="flex items-center justify-between mb-3">
-                    <h2 className="text-lg font-semibold">Recent Requests</h2>
-                    <Button asChild variant="ghost" size="sm">
-                        <Link href="/tenant-dashboard/requests">
-                            View all <ArrowRight className="h-4 w-4 ml-1" />
-                        </Link>
-                    </Button>
-                </div>
-
-                {recentRentals.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">
-                        You haven&apos;t submitted any rental requests yet.
-                    </p>
-                ) : (
-                    <div className="space-y-2">
-                        {recentRentals.map((r: RentalRequest) => (
-                            <Card key={r.id}>
-                                <CardContent className="flex items-center justify-between py-3">
-                                    <div>
-                                        <p className="font-medium">{r.property?.title}</p>
-                                        <p className="text-xs text-muted-foreground">
-                                            {new Date(r.createdAt).toLocaleDateString()}
-                                        </p>
-                                    </div>
-                                    <Badge variant={statusVariant[r.status]}>{r.status}</Badge>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
-                )}
-            </div>
+          <Button asChild variant="secondary">
+            <Link href="/properties">
+              Explore homes
+              <MoveUpRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
         </div>
-    );
+        <div className="pointer-events-none absolute -right-12 -top-16 size-56 rounded-full border border-primary-foreground/10" />
+        <div className="pointer-events-none absolute -bottom-24 right-20 size-64 rounded-full border border-primary-foreground/10" />
+      </section>
+
+      <section
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
+        aria-label="Rental summary"
+      >
+        {statCards.map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <Card
+              key={stat.key}
+              className="gap-5 py-5 transition-shadow hover:shadow-md"
+            >
+              <CardHeader className="flex flex-row items-start justify-between gap-4 px-5 pb-0">
+                <div className="flex flex-col gap-1">
+                  <CardDescription>{stat.label}</CardDescription>
+                  <CardTitle className="text-3xl tracking-tight">
+                    {values[stat.key]}
+                  </CardTitle>
+                </div>
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                  <Icon aria-hidden="true" />
+                </div>
+              </CardHeader>
+              <CardContent className="px-5 pb-0 text-xs text-muted-foreground">
+                {stat.description}
+              </CardContent>
+            </Card>
+          );
+        })}
+      </section>
+
+      {(needsPayment.length > 0 || needsReview.length > 0) && (
+        <section className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-xl font-semibold tracking-tight">
+              Needs your attention
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              A few quick actions will keep your rental journey moving.
+            </p>
+          </div>
+          <div className="grid gap-3 lg:grid-cols-2">
+            {needsPayment.map((r) => (
+              <Card key={r.id} className="border-primary/20 bg-primary/4">
+                <CardContent className="flex items-center justify-between gap-4 p-5">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <Wallet aria-hidden="true" />
+                    </div>
+                    <div className="flex min-w-0 flex-col gap-1">
+                      <p className="truncate font-medium">
+                        {r.property?.title}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Payment required to activate
+                      </p>
+                    </div>
+                  </div>
+                  <Button asChild size="sm">
+                    <Link href={`/tenant-dashboard/requests/${r.id}/pay`}>
+                      Pay now
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+            {needsReview.map((r) => (
+              <Card key={r.id}>
+                <CardContent className="flex items-center justify-between gap-4 p-5">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-secondary text-secondary-foreground">
+                      <CheckCircle2 aria-hidden="true" />
+                    </div>
+                    <div className="flex min-w-0 flex-col gap-1">
+                      <p className="truncate font-medium">
+                        {r.property?.title}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Share your experience
+                      </p>
+                    </div>
+                  </div>
+                  <Button asChild size="sm" variant="outline">
+                    <Link href={`/properties/${r.propertyId}`}>Review</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section className="flex flex-col gap-4">
+        <div className="flex items-end justify-between gap-4">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-xl font-semibold tracking-tight">
+              Recent requests
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Your latest rental applications.
+            </p>
+          </div>
+          <Button asChild variant="ghost" size="sm">
+            <Link href="/tenant-dashboard/requests">
+              View all
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+
+        {recentRentals.length === 0 ? (
+          <Card className="border-dashed">
+            <CardContent className="flex flex-col items-center justify-center gap-3 py-12 text-center">
+              <div className="flex size-12 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
+                <Home aria-hidden="true" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <p className="font-medium">No requests yet</p>
+                <p className="text-sm text-muted-foreground">
+                  Find a place that feels like home to get started.
+                </p>
+              </div>
+              <Button asChild>
+                <Link href="/properties">Browse properties</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card>
+            <CardContent className="p-0">
+              <div className="flex flex-col">
+                {recentRentals.map((r: RentalRequest, index) => (
+                  <div key={r.id}>
+                    <div className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex min-w-0 items-center gap-3">
+                        <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground">
+                          <Home aria-hidden="true" />
+                        </div>
+                        <div className="flex min-w-0 flex-col gap-1">
+                          <p className="truncate font-medium">
+                            {r.property?.title}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Submitted{" "}
+                            {new Date(r.createdAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                      <Badge
+                        className="w-fit"
+                        variant={statusVariant[r.status]}
+                      >
+                        {r.status}
+                      </Badge>
+                    </div>
+                    {index < recentRentals.length - 1 && <Separator />}
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </section>
+    </div>
+  );
 }
