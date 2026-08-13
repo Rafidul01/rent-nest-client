@@ -8,7 +8,6 @@ import { toast } from "sonner";
 
 export default function PayButton({ rentalRequestId }: { rentalRequestId: string }) {
     const [loading, setLoading] = useState(false);
-    console.log(rentalRequestId)
 
     const handlePay = async () => {
         setLoading(true);

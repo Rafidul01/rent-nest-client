@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import jwt ,{ JwtPayload } from "jsonwebtoken";
+import type { JwtPayload } from "jsonwebtoken";
 import { jwtUtils } from './utils/jwt';
  
 const AUTH_ROUTES =   ["/login", "/register"];

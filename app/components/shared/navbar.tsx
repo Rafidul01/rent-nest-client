@@ -5,8 +5,6 @@ import Link from "next/link"
 import {
   Home,
   Building2,
-  Heart,
-  Phone,
   Menu,
   LayoutDashboard,
   User,
@@ -18,7 +16,6 @@ import { Button } from "@/components/ui/button"
 import {
   Avatar,
   AvatarFallback,
-  AvatarImage,
 } from "@/components/ui/avatar"
 
 import {
@@ -46,9 +43,16 @@ import { toast } from "sonner"
 const routes = [
   { label: "Home", href: "/", icon: Home },
   { label: "Properties", href: "/properties", icon: Building2 },
-  { label: "Favorites", href: "/favorites", icon: Heart },
-  { label: "Contact", href: "/contact", icon: Phone },
 ]
+
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
 
 function getProfileMenu(role: UserData["data"]["role"]) {
     const basePath =
@@ -123,8 +127,7 @@ export function Navbar({user} : {user: UserData}) {
                 aria-label="Open user menu"
               >
                 <Avatar className="size-9">
-                  <AvatarImage src={user.data.role} />
-                  <AvatarFallback>AC</AvatarFallback>
+                  <AvatarFallback>{getInitials(user.data.name)}</AvatarFallback>
                 </Avatar>
               </button>
             </DropdownMenuTrigger>
@@ -160,7 +163,6 @@ export function Navbar({user} : {user: UserData}) {
               <DropdownMenuItem
                 className="text-red-500"
                 onSelect={handleLogout}
-                onClick={() => console.log("Logout")}
               >
                 <LogOut className="mr-2 h-4 w-4" />
                 Log out

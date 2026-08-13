@@ -16,7 +16,7 @@ import {
   ShieldCheck,
   UserRound,
 } from "lucide-react";
-import { getMe } from "../_actions/getMe";
+import { getUser } from "@/service/getUser";
 
 function getInitials(name: string) {
   return name
@@ -36,7 +36,7 @@ function formatDate(value: string | Date) {
 }
 
 export default async function TenantProfilePage() {
-  const { data: user } = await getMe();
+  const { data: user } = await getUser();
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-6">
