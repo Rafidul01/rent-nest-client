@@ -9,7 +9,7 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs";
-import { MapPin } from "lucide-react";
+import { FileText, MapPin } from "lucide-react";
 import { RentalRequest, RentalStatus } from "@/app/lib/types";
 import RequestStatusBadge from "../../_components/RequestStatusBadge";
 
@@ -46,8 +46,11 @@ export default function RequestsList({ rentals }: { rentals: RentalRequest[] }) 
             </Tabs>
 
             {filtered.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-16 text-center border rounded-lg">
-                    <p className="text-lg font-medium">
+                <div className="flex flex-col items-center justify-center py-16 text-center border rounded-xl bg-card">
+                    <div className="flex size-12 items-center justify-center rounded-xl bg-muted text-muted-foreground">
+                        <FileText className="size-6" aria-hidden="true" />
+                    </div>
+                    <p className="text-lg font-medium mt-4">
                         {filter === "ALL" ? "No rental requests yet" : `No ${filter.toLowerCase()} requests`}
                     </p>
                     {filter === "ALL" && (
@@ -64,7 +67,7 @@ export default function RequestsList({ rentals }: { rentals: RentalRequest[] }) 
             ) : (
                 <div className="space-y-3">
                     {filtered.map((r) => (
-                        <Card key={r.id}>
+                        <Card key={r.id} className="transition-shadow hover:shadow-md">
                             <CardContent className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4">
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2 mb-1">
@@ -85,7 +88,7 @@ export default function RequestsList({ rentals }: { rentals: RentalRequest[] }) 
                                             Move-in: {new Date(r.moveInDate).toLocaleDateString()}
                                         </span>
                                         <span>{r.durationMonths} months</span>
-                                        <span>৳{r.totalAmount.toLocaleString()}</span>
+                                        <span className="tabular-nums">৳{r.totalAmount.toLocaleString()}</span>
                                     </div>
                                 </div>
 

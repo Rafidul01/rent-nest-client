@@ -1,39 +1,30 @@
-// app/(dashboard)/tenant-dashboard/requests/[id]/pay/_components/PayButton.tsx
+// app/(dashboardGroup)/tenant-dashboard/requests/[id]/pay/_components/PayButton.tsx
 "use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { createPayment } from "@/app/(dashboardGroup)/tenant-dashboard/_actions/createPayment";
 
 export default function PayButton({ rentalRequestId }: { rentalRequestId: string }) {
     const [loading, setLoading] = useState(false);
 
     const handlePay = async () => {
         setLoading(true);
-        try {
-            const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/payments/create`,
-                {
-                    method: "POST",
-                    credentials: "include",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ requestId: rentalRequestId }),
-                }
-            );
 
-            const json = await res.json();
+        const result = await createPayment(rentalRequestId);
 
-            if (!res.ok) {
-                toast.error(json.message || "Failed to start payment");
-                setLoading(false);
-                return;
-            }
+        if (!result.success) {
+            toast.error(result.message);
+            setLoading(false);
+            return;
+        }
 
-            // redirect to Stripe's hosted checkout page
-            window.location.href = json.data.paymentURL;
-        } catch (err) {
-            toast.error("Something went wrong. Please try again.");
+        if (result.paymentURL) {
+            window.location.href = result.paymentURL;
+        } else {
+            toast.error("No checkout link returned. Please try again.");
             setLoading(false);
         }
     };

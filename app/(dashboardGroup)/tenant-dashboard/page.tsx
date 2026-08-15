@@ -21,18 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import { getMyPayments } from "./_actions/getMyPayments";
 import { getMyRentals } from "./_actions/getMyRentals";
 import { RentalRequest } from "@/app/lib/types";
-
-const statusVariant: Record<
-  string,
-  "default" | "secondary" | "destructive" | "outline"
-> = {
-  PENDING: "outline",
-  APPROVED: "secondary",
-  REJECTED: "destructive",
-  ACTIVE: "default",
-  COMPLETED: "secondary",
-  CANCELLED: "destructive",
-};
+import RequestStatusBadge from "../_components/RequestStatusBadge";
 
 const statCards = [
   {
@@ -93,32 +82,30 @@ export default async function TenantDashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <section className="relative overflow-hidden rounded-3xl border bg-primary px-6 py-7 text-primary-foreground shadow-sm sm:px-8 sm:py-9">
-        <div className="relative z-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+      <section className="relative overflow-hidden rounded-2xl border bg-primary px-5 py-6 text-primary-foreground shadow-sm sm:px-8 sm:py-8">
+        <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex max-w-xl flex-col gap-3">
             <Badge className="w-fit border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/15">
               Tenant dashboard
             </Badge>
             <div className="flex flex-col gap-2">
-              <h1 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
+              <h1 className="text-balance text-2xl font-semibold tracking-tight sm:text-3xl">
                 Your rental journey, at a glance.
               </h1>
-              <p className="max-w-lg text-pretty text-sm leading-6 text-primary-foreground/75 sm:text-base">
+              <p className="max-w-lg text-pretty text-sm leading-6 text-primary-foreground/75">
                 Track applications, manage active homes, and stay on top of
                 every payment in one calm place.
               </p>
             </div>
           </div>
 
-          <Button asChild variant="secondary">
+          <Button asChild variant="secondary" className="w-fit">
             <Link href="/properties">
               Explore homes
               <MoveUpRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>
-        <div className="pointer-events-none absolute -right-12 -top-16 size-56 rounded-full border border-primary-foreground/10" />
-        <div className="pointer-events-none absolute -bottom-24 right-20 size-64 rounded-full border border-primary-foreground/10" />
       </section>
 
       <section
@@ -130,16 +117,18 @@ export default async function TenantDashboardPage() {
           return (
             <Card
               key={stat.key}
-              className="gap-5 py-5 transition-shadow hover:shadow-md"
+              className="gap-4 py-5 transition-shadow hover:shadow-md"
             >
               <CardHeader className="flex flex-row items-start justify-between gap-4 px-5 pb-0">
                 <div className="flex flex-col gap-1">
-                  <CardDescription>{stat.label}</CardDescription>
-                  <CardTitle className="text-3xl tracking-tight">
+                  <CardDescription className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                    {stat.label}
+                  </CardDescription>
+                  <CardTitle className="text-3xl tabular-nums tracking-tight">
                     {values[stat.key]}
                   </CardTitle>
                 </div>
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Icon aria-hidden="true" />
                 </div>
               </CardHeader>
@@ -234,7 +223,7 @@ export default async function TenantDashboardPage() {
         {recentRentals.length === 0 ? (
           <Card className="border-dashed">
             <CardContent className="flex flex-col items-center justify-center gap-3 py-12 text-center">
-              <div className="flex size-12 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
+              <div className="flex size-12 items-center justify-center rounded-xl bg-muted text-muted-foreground">
                 <Home aria-hidden="true" />
               </div>
               <div className="flex flex-col gap-1">
@@ -269,12 +258,7 @@ export default async function TenantDashboardPage() {
                           </p>
                         </div>
                       </div>
-                      <Badge
-                        className="w-fit"
-                        variant={statusVariant[r.status]}
-                      >
-                        {r.status}
-                      </Badge>
+                      <RequestStatusBadge status={r.status} />
                     </div>
                     {index < recentRentals.length - 1 && <Separator />}
                   </div>

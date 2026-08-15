@@ -17,6 +17,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { getUser } from "@/service/getUser";
+import { PageHeader } from "../../_components/PageHeader";
 
 function getInitials(name: string) {
   return name
@@ -40,16 +41,11 @@ export default async function TenantProfilePage() {
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-6">
-      <section className="flex flex-col gap-2">
-        <p className="text-sm font-medium text-primary">Account center</p>
-        <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-          Your profile
-        </h1>
-        <p className="max-w-xl text-muted-foreground leading-6">
-          Keep your personal information up to date so your rental experience
-          stays simple and seamless.
-        </p>
-      </section>
+      <PageHeader
+        eyebrow="Account center"
+        title="Your profile"
+        description="Keep your personal information up to date so your rental experience stays simple and seamless."
+      />
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(260px,0.6fr)]">
         <Card className="overflow-hidden">
