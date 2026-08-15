@@ -9,34 +9,46 @@ Status legend: ⬜ not started · 🔵 in progress · ✅ done
 - [x] Fix `getUser.ts` fs import/cache, PayButton `console.log`, login dead link
 - [x] Fix pre-existing lint errors (`proxy.ts`, `utils/jwt.ts`, `hooks/use-mobile.ts`)
 
-## Phase B — Finish tenant flow
-- [ ] Implement `RequestToRentButton` — `POST /api/rentals` (logged-in tenant), redirect to requests
-- [ ] `/tenant-dashboard/payments` — history table from `getMyPayments`
-- [ ] `/payment/success/[transactionId]` — Stripe confirmation page
-- [ ] `/payment/cancel/[transactionId]` — Stripe cancel page
-- [ ] Add `error.tsx` for tenant segments; verify `proxy.ts` matcher allows payment routes
+## Phase B — Tenant flow ✅
+- [x] Implement `RequestToRentButton` — server action `createRentalRequest` (`POST /api/rentals`, cookie-forwarded), logged-in tenant form, redirect to requests
+- [x] `/tenant-dashboard/payments` — history + stat cards from `getMyPayments`
+- [x] `/payment/success/[transactionId]` — Stripe confirmation page with webhook polling (`PaymentStatus` polls `getPaymentByTransactionId` until `COMPLETED`)
+- [x] `/payment/cancel/[transactionId]` — Stripe cancel page
+- [x] Add `error.tsx` for tenant segments; verified `proxy.ts` matcher allows payment routes (auth-cookie required, fine post-Stripe)
 
-## Phase C — Landlord dashboard
-- [ ] Overview page
-- [ ] Property list (`GET /api/landlord/properties`)
-- [ ] Property create/edit/delete forms (`POST/PUT/DELETE /api/landlord/properties`)
-- [ ] Requests table + approve/reject with optimistic UI (`GET/PATCH /api/landlord/requests/:id`)
-- [ ] Landlord profile page
+### Phase B fixes (found while building)
+- [x] **PayButton payment bug** — was a client-side cross-origin `fetch` (token never forwarded → 401 → "Something went wrong"). Fixed with server action `createPayment.ts` (`POST /api/payments/create`, cookie-forwarded) → redirects to Stripe `paymentURL`. Verified end-to-end via API flow.
+- [x] **Stripe redirect target** — backend `.env` `APP_URL` pointed at backend (`:8000`). Changed to `http://localhost:3000` so Stripe `success_url`/`cancel_url` hit the frontend pages. ⚠️ Restart backend; must point at deployed frontend in prod.
 
-## Phase D — Admin dashboard
+## Phase C — Dashboard shell & design ✅ (done as an extra pass)
+- [x] Redesign `(dashboardGroup)` layout: dark ink-teal rail + paper canvas + sticky "doorplate" app bar (`DashboardAppBar`, `DashboardSidebar`)
+- [x] Fix mobile responsiveness — nav trigger in app bar (was commented out), mobile sheet close button, collapsible icon rail on desktop
+- [x] Add `--paper` token + ink-teal `--sidebar-*` tokens in `globals.css`
+- [x] Polish every tenant page with shared `PageHeader` (eyebrow + title + description), `tabular-nums`, consistent icon chips/empty states (`overview`, `requests`, `payments`, `profile`, `pay`, `error`)
+- [x] Clean remaining tenant-segment lint warnings (unused imports, `err`)
+
+## Phase D — Landlord dashboard ✅
+- [x] Overview page — hero, portfolio stat cards, "Needs your decision" queue, portfolio snapshot with letting lamps
+- [x] Property list — letting-board grid of tiles (lamp = Letting/Let out), edit/delete per tile (`GET /api/properties` filtered by `landlordId` — backend has no `/api/landlord/properties` endpoint)
+- [x] Property create/edit/delete forms (`POST/PUT/DELETE /api/landlord/properties`) — shared `PropertyForm` (new + `[id]/edit`), two-step confirm delete
+- [x] Requests table + approve/reject with optimistic UI (`GET/PATCH /api/landlord/requests/:id`) — `DecisionCard` flips status in place, reverts + toasts on error
+- [x] Landlord profile page + landlord `error.tsx`
+- [x] Verified end-to-end: register landlord → create property → tenant requests → approve → delete; all 6 routes render 200; tsc/lint/build clean
+
+## Phase E — Admin dashboard
 - [ ] Overview page
 - [ ] Users table + ban/unban (`GET/PATCH /api/admin/users/:id`)
 - [ ] Properties moderation list (`GET /api/admin/properties`)
 - [ ] Rentals moderation list (`GET /api/admin/rentals`)
 
-## Phase E — Public + polish
+## Phase F — Public + polish
 - [ ] Real home page `/` (featured properties) — replace placeholder `product-card.tsx`
 - [ ] Reviews — `ReviewsList` from API + submission form (blocked on backend ACTIVE→COMPLETED mechanism)
-- [ ] `error.tsx` per route segment; consistent toast/error-handling helper
-- [ ] Responsive/mobile pass across built pages
+- [ ] `error.tsx`/`loading.tsx` per route segment; consistent toast/error-handling helper
+- [ ] Responsive/mobile pass across remaining (landlord/admin/public) pages
 - [ ] `API_INTEGRATION.md` (mandatory deliverable)
 
-## Phase F — Deploy
-- [ ] Vercel; confirm `NEXT_PUBLIC_API_URL` + backend `app_url` (Stripe redirect) point at deployed frontend
+## Phase G — Deploy
+- [ ] Vercel; confirm `NEXT_PUBLIC_API_URL` + backend `APP_URL` (Stripe redirect) point at deployed frontend
 - [ ] Verify list endpoints don't have empty-array-as-404 bug (payments, landlord requests, admin lists)
 - [ ] `GET /api/rentals` response must `include: { review: true }`
