@@ -12,9 +12,9 @@
 |---|---|---|
 | Data fetching | Server Components + plain `fetch`, TanStack Query only where interactivity needs it | Simpler, faster first paint; most pages don't need client-side caching |
 | Auth | httpOnly cookies set by backend on login | Backend already issues `accessToken`/`refreshToken` cookies; frontend never touches raw tokens |
-| Route protection | Root `middleware.ts` (kept as originally scaffolded, "proxy" naming resolved) | Single gatekeeper for `/tenant-dashboard`, `/landlord-dashboard`, `/admin-dashboard` |
-| Dashboard layout | One shared `(dashboard)/layout.tsx`, nav driven by role config | All 3 dashboards share the same shell (sidebar + content); only nav items differ per role |
-| Route grouping | `(public)` for marketing/browse pages, `(auth)` for login/register, `(dashboard)` for all 3 role dashboards | Keeps URL clean, layouts scoped correctly (no duplicate `<html>`/`<body>`) |
+| Route protection | Root `proxy.ts` (Next.js 16 replaces `middleware.ts`; `proxy` export + `config.matcher`) | Single gatekeeper for `/tenant-dashboard`, `/landlord-dashboard`, `/admin-dashboard` |
+| Dashboard layout | One shared `(dashboardGroup)/layout.tsx`, nav driven by role config | All 3 dashboards share the same shell (sidebar + content); only nav items differ per role |
+| Route grouping | `(publicGroup)` for marketing/browse pages, `(authGroup)` for login/register, `(dashboardGroup)` for all 3 role dashboards | Keeps URL clean, layouts scoped correctly (no duplicate `<html>`/`<body>`) |
 | Component source | shadcn/ui throughout | Matches assignment's suggested stack |
 | Package manager | pnpm | — |
 
@@ -30,20 +30,20 @@
 
 ## 2. Route Map
 
-### Public — `(public)`
+### Public — `(publicGroup)`
 | Route | Status | Notes |
 |---|---|---|
 | `/` | ⬜ Not built | Home, featured properties |
 | `/properties` | ✅ Built | Grid + `FilterSidebar` (city, price, category), URL-param driven |
 | `/properties/[id]` | ✅ Built | Details page; `RequestToRentButton` and `ReviewsList` are **stubbed** |
 
-### Auth — `(auth)`
+### Auth — `(authGroup)`
 | Route | Status | Notes |
 |---|---|---|
-| `/login` | ✅ Built | Client-side `fetch` + `credentials: include` (not a Server Action — avoids multi-cookie forwarding issue) |
+| `/login` | ✅ Built | Server Action (`authActions.ts`) that sets httpOnly `accessToken`/`refreshToken` cookies manually, then `router.push("/")` |
 | `/register` | ✅ Built | Role selector (TENANT/LANDLORD); does **not** auto-login after register (backend doesn't set cookie on register) |
 
-### Tenant Dashboard — `(dashboard)/tenant-dashboard`
+### Tenant Dashboard — `(dashboardGroup)/tenant-dashboard`
 | Route | Status | Notes |
 |---|---|---|
 | `/tenant-dashboard` (overview) | ✅ Built | Stat cards, "needs attention" (pay/review prompts), recent 5 requests |
@@ -54,7 +54,7 @@
 | `/payment/success/[transactionId]` | ⬜ Not built | Stripe redirect target |
 | `/payment/cancel/[transactionId]` | ⬜ Not built | Stripe redirect target |
 
-### Landlord Dashboard — `(dashboard)/landlord-dashboard`
+### Landlord Dashboard — `(dashboardGroup)/landlord-dashboard`
 | Route | Status |
 |---|---|
 | `/landlord-dashboard` (overview) | ⬜ Not built |
@@ -63,7 +63,7 @@
 | `/landlord-dashboard/requests` | ⬜ Not built (approve/reject, optimistic UI per spec) |
 | `/landlord-dashboard/profile` | ⬜ Not built |
 
-### Admin Dashboard — `(dashboard)/admin-dashboard`
+### Admin Dashboard — `(dashboardGroup)/admin-dashboard`
 | Route | Status |
 |---|---|
 | `/admin-dashboard` (overview) | ⬜ Not built |
@@ -79,10 +79,10 @@
 |---|---|---|
 | `types.ts` (User, Property, Category, RentalRequest, Payment, Review, API wrappers) | ✅ Built | `app/lib/types.ts` |
 | `dashboard-nav.ts` (role → nav items config) | ✅ Built | `app/lib/dashboard-nav.ts` |
-| `middleware.ts` (route protection, role gating) | ✅ Built | project root |
+| `middleware.ts` (route protection, role gating) | ✅ Built | project root (note: Next.js 16 file is actually `proxy.ts`) |
 | `Navbar` (role-aware, dynamic profile menu) | ✅ Built | `app/components/shared/navbar.tsx` |
-| `DashboardSidebar` (shadcn Sidebar primitives) | ✅ Built | `app/(dashboard)/_components/` |
-| `RequestStatusBadge` (color-coded per spec) | ✅ Built | `app/(dashboard)/tenant-dashboard/_components/` |
+| `DashboardSidebar` (shadcn Sidebar primitives) | ✅ Built | `app/(dashboardGroup)/_components/` |
+| `RequestStatusBadge` (color-coded per spec) | ✅ Built | `app/(dashboardGroup)/_components/` |
 | `getUser` / `getMe` (current user fetch) | ✅ Built (confirm single shared source, avoid duplication) | — |
 | API error → toast handling pattern | ⚠️ Partial | Established in forms (`sonner`); not yet a single reusable helper |
 | `API_INTEGRATION.md` (mandatory deliverable) | ⬜ Not built | Maps components → backend endpoints |
@@ -143,6 +143,7 @@
 ## 6. Risks / Things to Double-Check Before Demo
 
 - Backend `config.app_url` used in Stripe `success_url`/`cancel_url` must point at the **frontend's** deployed URL, not the backend's own URL.
+- `/payment/success|cancel` are **not** in `proxy.ts` `PUBLIC_ROUTES`, so they require a valid auth cookie. That's fine for the Stripe redirect round-trip (cookies are still set), but unauthenticated direct visits bounce to `/login` — acceptable; no code change needed since `config.matcher` already permits these paths.
 - `GET /api/rentals` response must `include: { review: true }` so the frontend's "already reviewed" check (`!r.review`) works correctly.
 - Audit other backend list endpoints (payments, landlord requests, admin lists) for the same "empty array treated as 404" bug already found and fixed in `getRentalRequestsFromDB`.
 - Confirm `getUser()`/`getMe()` used in root layout, dashboard layout, and profile page are either the same shared function or kept in sync — currently at risk of drift/duplication.

@@ -7,6 +7,7 @@ import { MapPin, BedDouble, Bath, Ruler } from "lucide-react";
 import { getPropertyById } from "../_actions/getPropertyById";
 import RequestToRentButton from "../_components/RequestToRentButton";
 import ReviewsList from "../_components/ReviewsList";
+import { getUser } from "@/service/getUser";
 
 interface PropertyDetailsPageProps {
   params: Promise<{ id: string }>;
@@ -28,6 +29,10 @@ export default async function PropertyDetailsPage({
   if (!property) {
     notFound();
   }
+
+  const user = await getUser();
+  const isLoggedIn = user.success;
+  const isTenant = user.success && user.data.role === "TENANT";
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
@@ -137,7 +142,12 @@ export default async function PropertyDetailsPage({
                 /mo
               </span>
             </p>
-            <RequestToRentButton property={property} />
+            <RequestToRentButton
+              propertyId={property.id}
+              isAvailable={property.isAvailable}
+              isTenant={isTenant}
+              isLoggedIn={isLoggedIn}
+            />
           </div>
         </div>
       </div>

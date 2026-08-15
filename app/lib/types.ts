@@ -86,6 +86,8 @@ export interface Payment {
     userId: string;
     createdAt: string;
     updatedAt: string;
+
+    rentalRequest?: RentalRequest;
 }
 
 export interface Review {
