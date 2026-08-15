@@ -9,6 +9,7 @@ import {
     Field,
     FieldLabel,
     FieldDescription,
+    FieldError,
     FieldGroup,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -99,7 +100,9 @@ export default function RequestToRentButton({
                                 name="moveInDate"
                                 type="date"
                                 required
+                                aria-invalid={!!state.fieldErrors?.moveInDate}
                             />
+                            <FieldError>{state.fieldErrors?.moveInDate}</FieldError>
                         </Field>
 
                         <Field>
@@ -111,7 +114,9 @@ export default function RequestToRentButton({
                                 min={1}
                                 placeholder="e.g. 6"
                                 required
+                                aria-invalid={!!state.fieldErrors?.duration}
                             />
+                            <FieldError>{state.fieldErrors?.duration}</FieldError>
                         </Field>
 
                         <Field>

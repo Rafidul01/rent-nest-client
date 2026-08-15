@@ -1,28 +1,35 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { rentalRequestSchema, toFieldErrors } from "@/app/lib/schemas";
 
 export type CreateRentalState = {
     success: boolean;
     message: string;
     errorDetails?: unknown;
+    fieldErrors?: Record<string, string>;
 };
 
 export const createRentalRequest = async (
     previousState: CreateRentalState,
     formData: FormData
 ): Promise<CreateRentalState> => {
-    const propertyId = formData.get("propertyId");
-    const moveInDate = formData.get("moveInDate");
-    const duration = formData.get("duration");
-    const message = formData.get("message");
+    const parsed = rentalRequestSchema.safeParse({
+        propertyId: formData.get("propertyId"),
+        moveInDate: formData.get("moveInDate"),
+        duration: formData.get("duration"),
+        message: formData.get("message") || undefined,
+    });
 
-    if (!propertyId || !moveInDate || !duration) {
+    if (!parsed.success) {
         return {
             success: false,
-            message: "Please provide a move-in date and duration.",
+            message: "Please check the highlighted fields.",
+            fieldErrors: toFieldErrors(parsed.error),
         };
     }
+
+    const { propertyId, moveInDate, duration, message } = parsed.data;
 
     const cookieStore = await cookies();
 
@@ -35,7 +42,7 @@ export const createRentalRequest = async (
         body: JSON.stringify({
             propertyId,
             moveInDate,
-            duration: Number(duration),
+            duration,
             message: message || undefined,
         }),
     });

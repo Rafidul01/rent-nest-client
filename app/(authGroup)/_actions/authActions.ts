@@ -1,19 +1,33 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { loginSchema, registerSchema, toFieldErrors } from "@/app/lib/schemas";
 
 export type LoginState = {
     success: boolean;
     message: string;
     errorDetails?: unknown;
+    fieldErrors?: Record<string, string>;
 };
 
 export const loginAction = async (
     previousState: LoginState,
     formData: FormData
 ): Promise<LoginState> => {
-    const email = formData.get("email");
-    const password = formData.get("password");
+    const parsed = loginSchema.safeParse({
+        email: formData.get("email"),
+        password: formData.get("password"),
+    });
+
+    if (!parsed.success) {
+        return {
+            success: false,
+            message: "Please check the highlighted fields.",
+            fieldErrors: toFieldErrors(parsed.error),
+        };
+    }
+
+    const { email, password } = parsed.data;
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
         method: "POST",
@@ -58,17 +72,31 @@ export type RegisterState = {
     success: boolean;
     message: string;
     errorDetails?: unknown;
+    fieldErrors?: Record<string, string>;
 };
 
 export const registerAction = async (
     previousState: RegisterState,
     formData: FormData
 ): Promise<RegisterState> => {
-    const name = formData.get("name");
-    const email = formData.get("email");
-    const password = formData.get("password");
     const phone = formData.get("phone");
-    const role = formData.get("role");
+    const parsed = registerSchema.safeParse({
+        name: formData.get("name"),
+        email: formData.get("email"),
+        phone: phone ? String(phone) : undefined,
+        password: formData.get("password"),
+        role: formData.get("role"),
+    });
+
+    if (!parsed.success) {
+        return {
+            success: false,
+            message: "Please check the highlighted fields.",
+            fieldErrors: toFieldErrors(parsed.error),
+        };
+    }
+
+    const { name, email, password, role } = parsed.data;
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {
         method: "POST",

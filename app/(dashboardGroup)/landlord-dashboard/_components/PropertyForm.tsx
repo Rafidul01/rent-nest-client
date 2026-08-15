@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Category, Property } from "@/app/lib/types";
+import { propertyFormSchema, toFieldErrors } from "@/app/lib/schemas";
 import { createProperty } from "../_actions/createProperty";
 import { updateProperty } from "../_actions/updateProperty";
 
@@ -36,10 +37,8 @@ const toList = (value: string) =>
     .map((s) => s.trim())
     .filter(Boolean);
 
-const toNumber = (value: string) => {
-  const n = Number(value);
-  return Number.isFinite(n) ? n : undefined;
-};
+const emptyToUndefined = (value: string) =>
+  value.trim() === "" ? undefined : value;
 
 export function PropertyForm({ categories, property }: PropertyFormProps) {
   const router = useRouter();
@@ -67,37 +66,28 @@ export function PropertyForm({ categories, property }: PropertyFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!form.title.trim() || !form.city.trim()) {
-      toast.error("Title and city are required");
-      return;
-    }
-
-    const price = toNumber(form.price);
-    if (!price || price <= 0) {
-      toast.error("Enter a valid monthly price");
-      return;
-    }
-
-    if (!form.categoryId) {
-      toast.error("Choose a category");
-      return;
-    }
-
-    const payload = {
-      title: form.title.trim(),
-      description: form.description.trim(),
-      address: form.address.trim(),
-      city: form.city.trim(),
-      price,
-      bedrooms: toNumber(form.bedrooms),
-      bathrooms: toNumber(form.bathrooms),
-      areaSqft: toNumber(form.areaSqft),
+    const parsed = propertyFormSchema.safeParse({
+      title: form.title,
+      description: form.description,
+      address: form.address,
+      city: form.city,
+      price: form.price,
+      bedrooms: emptyToUndefined(form.bedrooms),
+      bathrooms: emptyToUndefined(form.bathrooms),
+      areaSqft: emptyToUndefined(form.areaSqft),
       amenities: toList(form.amenities),
       images: toList(form.images),
       categoryId: form.categoryId,
       isAvailable: form.isAvailable === "true",
-    };
+    });
 
+    if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0];
+      toast.error(firstIssue?.message ?? "Please check the form.");
+      return;
+    }
+
+    const payload = parsed.data;
     setPending(true);
 
     const result = property

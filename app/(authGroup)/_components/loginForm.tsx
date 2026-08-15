@@ -4,6 +4,7 @@ import {
   Field,
   FieldLabel,
   FieldDescription,
+  FieldError,
   FieldGroup,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -46,7 +47,9 @@ export default function LoginForm() {
               placeholder="you@example.com"
               autoComplete="email"
               required
+              aria-invalid={!!state.fieldErrors?.email}
             />
+            <FieldError>{state.fieldErrors?.email}</FieldError>
           </Field>
 
           <Field>
@@ -61,6 +64,7 @@ export default function LoginForm() {
                 placeholder="Enter your password"
                 autoComplete="current-password"
                 required
+                aria-invalid={!!state.fieldErrors?.password}
                 className="pr-10"
               />
               <button
@@ -76,6 +80,7 @@ export default function LoginForm() {
                 )}
               </button>
             </div>
+            <FieldError>{state.fieldErrors?.password}</FieldError>
           </Field>
 
           <Field>
