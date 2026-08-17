@@ -1,26 +1,31 @@
-
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
 
 import "./globals.css";
-// import { Navbar } from "./components/shared/navbar";
 import { Toaster } from "sonner";
-// import { getUser } from "@/service/getUser";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-    // const user = await getUser();
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en" className="h-full antialiased">
+        <html
+            lang="en"
+            className={`${inter.variable} h-full antialiased`}
+            suppressHydrationWarning
+        >
             <body className="min-h-full flex flex-col" suppressHydrationWarning>
-                <TooltipProvider>
-                    {/* <Navbar user={user} /> */}
-                    {children}
-                    <Toaster />
-                </TooltipProvider>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    <TooltipProvider>
+                        {children}
+                        <Toaster />
+                    </TooltipProvider>
+                </ThemeProvider>
             </body>
         </html>
     );

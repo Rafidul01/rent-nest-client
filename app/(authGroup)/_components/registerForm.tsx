@@ -24,14 +24,20 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { registerAction } from "../_actions/authActions";
 
-export default function RegisterForm() {
+export default function RegisterForm({
+  defaultRole,
+}: {
+  defaultRole?: "TENANT" | "LANDLORD";
+}) {
     const router = useRouter();
     const [state, action, pending] = useActionState(registerAction, {
         success: false,
         message: "",
     });
     const [showPassword, setShowPassword] = useState(false);
-    const [role, setRole] = useState("TENANT");
+    const [role, setRole] = useState<"TENANT" | "LANDLORD">(
+        defaultRole ?? "TENANT",
+    );
 
     useEffect(() => {
         if (state.message && state.success) {
@@ -117,7 +123,12 @@ export default function RegisterForm() {
                 <Field>
                     <FieldLabel htmlFor="role">I am a</FieldLabel>
                     <input type="hidden" name="role" value={role} />
-                    <Select value={role} onValueChange={setRole}>
+                    <Select
+                        value={role}
+                        onValueChange={(v) =>
+                            setRole(v as "TENANT" | "LANDLORD")
+                        }
+                    >
                         <SelectTrigger id="role" className="w-full">
                             <SelectValue placeholder="Select a role" />
                         </SelectTrigger>

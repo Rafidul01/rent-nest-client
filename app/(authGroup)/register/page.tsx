@@ -4,7 +4,13 @@ import RegisterForm from "../_components/registerForm";
 import Link from "next/link";
 import { Home } from "lucide-react";
 
-export default function RegisterPage() {
+interface RegisterPageProps {
+  searchParams: Promise<{ role?: string }>;
+}
+
+export default async function RegisterPage({ searchParams }: RegisterPageProps) {
+  const { role } = await searchParams;
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <div className="w-full max-w-sm border p-8 rounded-3xl">
@@ -26,7 +32,9 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        <RegisterForm />
+        <RegisterForm
+          defaultRole={role === "LANDLORD" ? "LANDLORD" : undefined}
+        />
       </div>
     </div>
   );

@@ -42,7 +42,7 @@ Status legend: ⬜ not started · 🔵 in progress · ✅ done
 - [x] Rentals moderation list (`GET /api/admin/rentals`)
 
 ## Phase F — Public + polish
-- [ ] Real home page `/` (featured properties) — replace placeholder `product-card.tsx`
+- [x] Real home page `/` — dark ink-teal hero ("already lit"), CSS marquee of live listings, category chips, featured grid, tenants/landlords value props, CTA band. Replaced + removed placeholder `product-card.tsx`; modernized `PropertyCard` (image zoom, glass category badge, letting lamp)
 - [ ] Reviews — `ReviewsList` from API + submission form (blocked on backend ACTIVE→COMPLETED mechanism)
 - [ ] `error.tsx`/`loading.tsx` per route segment; consistent toast/error-handling helper
 - [ ] Responsive/mobile pass across remaining (landlord/admin/public) pages
