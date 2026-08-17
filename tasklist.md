@@ -35,11 +35,11 @@ Status legend: ⬜ not started · 🔵 in progress · ✅ done
 - [x] Landlord profile page + landlord `error.tsx`
 - [x] Verified end-to-end: register landlord → create property → tenant requests → approve → delete; all 6 routes render 200; tsc/lint/build clean
 
-## Phase E — Admin dashboard
-- [ ] Overview page
-- [ ] Users table + ban/unban (`GET/PATCH /api/admin/users/:id`)
-- [ ] Properties moderation list (`GET /api/admin/properties`)
-- [ ] Rentals moderation list (`GET /api/admin/rentals`)
+## Phase E — Admin dashboard ✅
+- [x] Overview page
+- [x] Users table + ban/unban (`GET/PATCH /api/admin/users/:id`)
+- [x] Properties moderation list (`GET /api/properties` — backend has no `/api/admin/properties` route, same situation as landlord)
+- [x] Rentals moderation list (`GET /api/admin/rentals`)
 
 ## Phase F — Public + polish
 - [ ] Real home page `/` (featured properties) — replace placeholder `product-card.tsx`
