@@ -10,10 +10,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useState } from "react";
 import { loginAction } from "../_actions/authActions";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useActionResultToast } from "@/app/lib/action-feedback";
 
 export default function LoginForm() {
   const [state, action, pending] = useActionState(loginAction, {
@@ -21,18 +21,10 @@ export default function LoginForm() {
     message: "",
   });
 
-  const router = useRouter()
+  const router = useRouter();
 
-  useEffect(() => {
-    if (state.success) {
-      toast.success(state.message);
-      router.push("/")
-    }
+  useActionResultToast(state, () => router.push("/"));
 
-    if (state.errorDetails) {
-      toast.error(state.message);
-    }
-  }, [state]);
   const [showPassword, setShowPassword] = useState(false);
   return (
     <div>

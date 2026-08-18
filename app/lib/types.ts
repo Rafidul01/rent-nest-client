@@ -70,6 +70,7 @@ export interface RentalRequest {
     property?: Property;
     tenant?: Pick<User, "id" | "name" | "email" | "phone">;
     payment?: Payment | null;
+    review?: Review | null;
 }
 
 export interface Payment {

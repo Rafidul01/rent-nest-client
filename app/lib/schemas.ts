@@ -14,6 +14,16 @@ export const registerSchema = z.object({
   role: z.enum(["TENANT", "LANDLORD"], { message: "Choose a role" }),
 });
 
+export const reviewSchema = z.object({
+  rentalRequestId: z.string().min(1, "Rental request is required"),
+  rating: z.coerce
+    .number()
+    .int("Rating must be a whole number")
+    .min(1, "Pick a rating")
+    .max(5, "Rating must be between 1 and 5"),
+  comment: z.string().optional(),
+});
+
 export const rentalRequestSchema = z.object({
   propertyId: z.string().min(1, "Property is required"),
   moveInDate: z.string().min(1, "Choose a move-in date"),

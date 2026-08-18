@@ -128,7 +128,7 @@ export default async function TenantPaymentsPage() {
                             {p.rentalRequest?.property?.title ||
                               `Payment ${p.transactionId}`}
                           </Link>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="truncate text-xs text-muted-foreground">
                             {p.transactionId} · {p.method} ·{" "}
                             {new Date(p.createdAt).toLocaleDateString()}
                           </p>

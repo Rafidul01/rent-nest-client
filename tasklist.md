@@ -43,10 +43,10 @@ Status legend: ⬜ not started · 🔵 in progress · ✅ done
 
 ## Phase F — Public + polish
 - [x] Real home page `/` — dark ink-teal hero ("already lit"), CSS marquee of live listings, category chips, featured grid, tenants/landlords value props, CTA band. Replaced + removed placeholder `product-card.tsx`; modernized `PropertyCard` (image zoom, glass category badge, letting lamp)
-- [ ] Reviews — `ReviewsList` from API + submission form (blocked on backend ACTIVE→COMPLETED mechanism)
-- [ ] `error.tsx`/`loading.tsx` per route segment; consistent toast/error-handling helper
-- [ ] Responsive/mobile pass across remaining (landlord/admin/public) pages
-- [ ] `API_INTEGRATION.md` (mandatory deliverable)
+- [x] Reviews — `ReviewsList` from API + submission form (blocked on backend ACTIVE→COMPLETED mechanism) — ✅ FE done: `getReviews`/`createReview`/`getEligibleRental` actions, star-rating `ReviewForm`, `review` on `RentalRequest` type. E2E still waits on backend `ACTIVE→COMPLETED` (if any).
+- [x] `error.tsx`/`loading.tsx` per route segment; consistent toast/error-handling helper — ✅ shared `ErrorState` + `LoadingState` (`components/shared/`), `action-feedback.ts` (`toastActionResult`, `useActionResultToast`); error/loading added to all public/auth/payment/dashboard segments; dashboards refactored onto `ErrorState`
+- [x] Responsive/mobile pass across remaining (landlord/admin/public) pages — ✅ hero stat row gap/min-w-0, payment meta truncate; dashboards already collapsed to stacked rows on mobile
+- [x] `API_INTEGRATION.md` (mandatory deliverable)
 
 ## Phase G — Deploy
 - [ ] Vercel; confirm `NEXT_PUBLIC_API_URL` + backend `APP_URL` (Stripe redirect) point at deployed frontend

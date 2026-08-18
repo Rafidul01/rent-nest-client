@@ -4,9 +4,9 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Loader2, ShieldBan, ShieldCheck } from "lucide-react";
-import { toast } from "sonner";
 import { UserStatus } from "@/app/lib/types";
 import { updateUserStatus } from "../_actions/updateUserStatus";
+import { toastActionResult } from "@/app/lib/action-feedback";
 
 export function BanButton({
   userId,
@@ -39,15 +39,14 @@ export function BanButton({
     const next = banned ? "ACTIVE" : "BANNED";
     const result = await updateUserStatus(userId, next as UserStatus);
 
-    if (!result.success) {
-      toast.error(result.message);
-      setPending(false);
-      return;
-    }
+    toastActionResult(result, {
+      successMessage: banned ? "User reinstated" : "User banned",
+    });
 
     setPending(false);
-    toast.success(banned ? "User reinstated" : "User banned");
-    router.refresh();
+    if (result.success) {
+      router.refresh();
+    }
   };
 
   return (

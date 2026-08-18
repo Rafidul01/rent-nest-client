@@ -124,10 +124,10 @@ export default async function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-6 border-t border-sidebar-foreground/10 pt-6 sm:max-w-md">
+          <div className="grid grid-cols-3 gap-4 border-t border-sidebar-foreground/10 pt-6 sm:max-w-md sm:gap-6">
             {STATS.map((stat) => (
-              <div key={stat.key} className="flex flex-col gap-1">
-                <span className="text-2xl font-semibold tabular-nums tracking-tight sm:text-3xl">
+              <div key={stat.key} className="flex min-w-0 flex-col gap-1">
+                <span className="truncate text-2xl font-semibold tabular-nums tracking-tight sm:text-3xl">
                   {stats[stat.key]}
                 </span>
                 <span className="text-xs text-sidebar-foreground/60">

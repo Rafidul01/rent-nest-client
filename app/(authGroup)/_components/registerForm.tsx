@@ -19,10 +19,10 @@ import {
 } from "@/components/ui/select";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
-import { useActionState, useState, useEffect } from "react";
+import { useActionState, useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { registerAction } from "../_actions/authActions";
+import { useActionResultToast } from "@/app/lib/action-feedback";
 
 export default function RegisterForm({
   defaultRole,
@@ -39,14 +39,7 @@ export default function RegisterForm({
         defaultRole ?? "TENANT",
     );
 
-    useEffect(() => {
-        if (state.message && state.success) {
-            toast.success(state.message);
-            router.push("/login");
-        } else if (state.message && !state.success) {
-            toast.error(state.message);
-        }
-    }, [state, router]);
+    useActionResultToast(state, () => router.push("/login"));
 
     return (
         <form action={action}>

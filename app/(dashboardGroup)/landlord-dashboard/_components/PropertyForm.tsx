@@ -22,9 +22,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Category, Property } from "@/app/lib/types";
-import { propertyFormSchema, toFieldErrors } from "@/app/lib/schemas";
+import { propertyFormSchema } from "@/app/lib/schemas";
 import { createProperty } from "../_actions/createProperty";
 import { updateProperty } from "../_actions/updateProperty";
+import { toastActionResult } from "@/app/lib/action-feedback";
 
 interface PropertyFormProps {
   categories: Category[];
@@ -96,14 +97,12 @@ export function PropertyForm({ categories, property }: PropertyFormProps) {
 
     setPending(false);
 
-    if (!result.success) {
-      toast.error(result.message);
-      return;
-    }
+    toastActionResult(result);
 
-    toast.success(result.message);
-    router.push("/landlord-dashboard/properties");
-    router.refresh();
+    if (result.success) {
+      router.push("/landlord-dashboard/properties");
+      router.refresh();
+    }
   };
 
   return (

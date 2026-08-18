@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useActionState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { useActionResultToast } from "@/app/lib/action-feedback";
 import { createRentalRequest } from "../_actions/createRentalRequest";
 
 interface RequestToRentButtonProps {
@@ -37,14 +37,9 @@ export default function RequestToRentButton({
         message: "",
     });
 
-    useEffect(() => {
-        if (state.message && state.success) {
-            toast.success(state.message);
-            router.push("/tenant-dashboard/requests");
-        } else if (state.message && !state.success) {
-            toast.error(state.message);
-        }
-    }, [state, router]);
+    useActionResultToast(state, () => {
+        router.push("/tenant-dashboard/requests");
+    });
 
     if (!isAvailable) {
         return (

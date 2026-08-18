@@ -22,7 +22,7 @@ export default async function PropertyDetailsPage({
   try {
     const res = await getPropertyById(id);
     property = res.data;
-  } catch (err) {
+  } catch {
     notFound();
   }
 

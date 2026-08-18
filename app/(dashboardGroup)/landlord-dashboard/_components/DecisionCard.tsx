@@ -14,13 +14,13 @@ import {
   UserRound,
   X,
 } from "lucide-react";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { RentalRequest, User } from "@/app/lib/types";
 import RequestStatusBadge from "../../_components/RequestStatusBadge";
 import { updateRequestStatus } from "../_actions/updateRequestStatus";
+import { toastActionResult } from "@/app/lib/action-feedback";
 
 interface DecisionCardProps {
   request: Omit<RentalRequest, "property"> & {
@@ -60,14 +60,14 @@ export function DecisionCard({ request }: DecisionCardProps) {
     if (!result.success) {
       setStatus(request.status); // revert
       setPending(null);
-      toast.error(result.message);
+      toastActionResult(result);
       return;
     }
 
     setPending(null);
-    toast.success(
-      next === "APPROVED" ? "Request approved" : "Request declined",
-    );
+    toastActionResult(result, {
+      successMessage: next === "APPROVED" ? "Request approved" : "Request declined",
+    });
   };
 
   const isPending = status === "PENDING";

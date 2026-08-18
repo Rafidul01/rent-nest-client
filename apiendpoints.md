@@ -352,7 +352,27 @@ Response `data`: the created review.
 ### Get all reviews — `GET /api/reviews`
 Public.
 
-Response `data`: array of reviews.
+Response `data`: array of reviews. **Each review must include the `tenant` relation (`id`, `name`)** so the UI can show who wrote it.
+
+### Review object shape
+
+```json
+{
+  "id": "uuid",
+  "rating": 5,
+  "comment": "…",
+  "rentalRequestId": "uuid",
+  "propertyId": "uuid",
+  "tenantId": "uuid",
+  "createdAt": "ISO date",
+  "tenant": {
+    "id": "uuid",
+    "name": "John Doe"
+  }
+}
+```
+
+`tenant` is required for public display. A review without it cannot attribute the rating to a person.
 
 ---
 

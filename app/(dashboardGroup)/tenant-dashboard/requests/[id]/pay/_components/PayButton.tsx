@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { createPayment } from "@/app/(dashboardGroup)/tenant-dashboard/_actions/createPayment";
+import { toastActionResult } from "@/app/lib/action-feedback";
 
 export default function PayButton({ rentalRequestId }: { rentalRequestId: string }) {
     const [loading, setLoading] = useState(false);
@@ -16,7 +17,7 @@ export default function PayButton({ rentalRequestId }: { rentalRequestId: string
         const result = await createPayment(rentalRequestId);
 
         if (!result.success) {
-            toast.error(result.message);
+            toastActionResult(result);
             setLoading(false);
             return;
         }

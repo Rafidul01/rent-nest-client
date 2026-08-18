@@ -4,8 +4,8 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Loader2, Trash2 } from "lucide-react";
-import { toast } from "sonner";
 import { deleteProperty } from "../_actions/deleteProperty";
+import { toastActionResult } from "@/app/lib/action-feedback";
 
 export function DeletePropertyButton({ propertyId }: { propertyId: string }) {
   const router = useRouter();
@@ -29,14 +29,12 @@ export function DeletePropertyButton({ propertyId }: { propertyId: string }) {
     setPending(true);
     const result = await deleteProperty(propertyId);
 
-    if (!result.success) {
-      toast.error(result.message);
+    toastActionResult(result);
+    if (result.success) {
+      router.refresh();
+    } else {
       setPending(false);
-      return;
     }
-
-    toast.success(result.message);
-    router.refresh();
   };
 
   return (

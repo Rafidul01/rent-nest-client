@@ -1,8 +1,9 @@
+import { LoadingState } from "@/app/components/shared/loading-state";
 
-export default function loading() {
+export default function Loading() {
   return (
-    <div>
-      <h1>Loading...</h1>
+    <div className="container mx-auto max-w-6xl px-4 py-8">
+      <LoadingState />
     </div>
-  )
+  );
 }
