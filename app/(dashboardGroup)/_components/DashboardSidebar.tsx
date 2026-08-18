@@ -9,6 +9,7 @@ import {
   Home,
   LayoutDashboard,
   LucideIcon,
+  Tags,
   User,
   Users,
   X,
@@ -36,6 +37,7 @@ const iconMap: Record<IconName, LucideIcon> = {
   profile: User,
   properties: Building2,
   users: Users,
+  categories: Tags,
 };
 
 interface NavItem {

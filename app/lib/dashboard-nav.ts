@@ -2,7 +2,7 @@ import { Role } from "./types";
 
 export type IconName =
     | "dashboard" | "requests" | "payments" | "profile"
-    | "properties" | "users";
+    | "properties" | "users" | "categories";
 
 export function getDashboardNavItems(role: Role) {
     switch (role) {
@@ -26,6 +26,7 @@ export function getDashboardNavItems(role: Role) {
                 { label: "Users", href: "/admin-dashboard/users", icon: "users" as IconName },
                 { label: "Properties", href: "/admin-dashboard/properties", icon: "properties" as IconName },
                 { label: "Rentals", href: "/admin-dashboard/rentals", icon: "requests" as IconName },
+                { label: "Categories", href: "/admin-dashboard/categories", icon: "categories" as IconName },
             ];
         default:
             return [];

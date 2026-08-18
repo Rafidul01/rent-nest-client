@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import type { Property } from "@/app/lib/types";
+import { LettingLamp } from "./LettingLamp";
 
 function MarqueeCard({ property }: { property: Property }) {
   return (
@@ -23,9 +24,8 @@ function MarqueeCard({ property }: { property: Property }) {
         </div>
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
-      <span className="absolute left-2.5 top-2.5 flex size-2">
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/80" />
-        <span className="relative inline-flex size-2 rounded-full bg-emerald-400" />
+      <span className="absolute left-2.5 top-2.5 drop-shadow">
+        <LettingLamp lit className="size-4 text-lamp" />
       </span>
       <div className="absolute inset-x-0 bottom-0 flex flex-col gap-0.5 p-3 text-white">
         <p className="truncate text-sm font-semibold leading-tight">

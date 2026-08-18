@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { useActionResultToast } from "@/app/lib/action-feedback";
 import { createRentalRequest } from "../_actions/createRentalRequest";
 
@@ -22,6 +23,7 @@ interface RequestToRentButtonProps {
     isAvailable: boolean;
     isTenant: boolean;
     isLoggedIn: boolean;
+    onDark?: boolean;
 }
 
 export default function RequestToRentButton({
@@ -29,6 +31,7 @@ export default function RequestToRentButton({
     isAvailable,
     isTenant,
     isLoggedIn,
+    onDark,
 }: RequestToRentButtonProps) {
     const router = useRouter();
     const [open, setOpen] = useState(false);
@@ -85,7 +88,14 @@ export default function RequestToRentButton({
             </Button>
 
             {open && (
-                <form action={action} className="space-y-4 rounded-lg border p-4">
+                <form
+                    action={action}
+                    className={cn(
+                        "space-y-4 rounded-lg border p-4",
+                        onDark &&
+                            "border-sidebar-foreground/15 bg-sidebar-foreground/5",
+                    )}
+                >
                     <input type="hidden" name="propertyId" value={propertyId} />
                     <FieldGroup>
                         <Field>
@@ -95,6 +105,7 @@ export default function RequestToRentButton({
                                 name="moveInDate"
                                 type="date"
                                 required
+                                className={onDark ? "placeholder:text-sidebar-foreground/50" : undefined}
                                 aria-invalid={!!state.fieldErrors?.moveInDate}
                             />
                             <FieldError>{state.fieldErrors?.moveInDate}</FieldError>
@@ -109,6 +120,7 @@ export default function RequestToRentButton({
                                 min={1}
                                 placeholder="e.g. 6"
                                 required
+                                className={onDark ? "placeholder:text-sidebar-foreground/50" : undefined}
                                 aria-invalid={!!state.fieldErrors?.duration}
                             />
                             <FieldError>{state.fieldErrors?.duration}</FieldError>
@@ -121,7 +133,10 @@ export default function RequestToRentButton({
                                 name="message"
                                 rows={3}
                                 placeholder="A short note for the landlord"
-                                className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                className={cn(
+                                    "flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                                    onDark && "placeholder:text-sidebar-foreground/50",
+                                )}
                             />
                             <FieldDescription>
                                 The total rent is computed as price × duration.

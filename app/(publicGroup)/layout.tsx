@@ -1,5 +1,6 @@
 import { getUser } from "@/service/getUser";
 import { Navbar } from "@/app/components/shared/navbar";
+import { Footer } from "@/app/components/shared/footer";
 import type { Property } from "@/app/lib/types";
 
 const getLiveCount = async (): Promise<number> => {
@@ -20,9 +21,10 @@ export default async function PublicLayout({ children }: { children: React.React
     const [user, liveCount] = await Promise.all([getUser(), getLiveCount()]);
 
     return (
-        <>
+        <div className="flex min-h-svh flex-col">
             <Navbar user={user} liveCount={liveCount} />
-            {children}
-        </>
+            <div className="flex-1">{children}</div>
+            <Footer user={user} liveCount={liveCount} />
+        </div>
     );
 }

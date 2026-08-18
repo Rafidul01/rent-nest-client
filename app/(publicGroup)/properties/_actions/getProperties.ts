@@ -10,9 +10,13 @@ interface GetPropertiesParams {
     limit?: string;
 }
 
+type GetPropertiesResult =
+    | ApiSuccessResponse<Property[]>
+    | { success: false; message: string; data: [] };
+
 export const getProperties = async (
     filters: GetPropertiesParams = {}
-): Promise<ApiSuccessResponse<Property[]>> => {
+): Promise<GetPropertiesResult> => {
     const params = new URLSearchParams();
 
     Object.entries(filters).forEach(([key, value]) => {
@@ -29,7 +33,7 @@ export const getProperties = async (
     const json = await res.json();
 
     if (!res.ok) {
-        throw new Error(json.message || "Failed to fetch properties");
+        return { success: false, message: json.message || "Failed to fetch properties", data: [] };
     }
 
     return json as ApiSuccessResponse<Property[]>;

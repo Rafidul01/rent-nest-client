@@ -3,12 +3,15 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images : {
+    unoptimized: true,
     remotePatterns:[
       {
-        hostname: "encrypted-tbn0.gstatic.com"
+        protocol: "http",
+        hostname: "**"
       },
       {
-        hostname: "images.unsplash.com"
+        protocol: "https",
+        hostname: "**"
       }
     ]
   }

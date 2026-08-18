@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { LettingLamp } from "./_components/LettingLamp";
 import { getUser } from "@/service/getUser";
 import type { ApiSuccessResponse, Category, Property } from "@/app/lib/types";
 import { getProperties } from "./properties/_actions/getProperties";
@@ -76,7 +77,7 @@ export default async function Home() {
           className="pointer-events-none absolute inset-0 opacity-60"
           style={{
             backgroundImage:
-              "radial-gradient(60rem 30rem at 80% -10%, oklch(0.8 0.1 178 / 0.16), transparent 60%), radial-gradient(40rem 24rem at 5% 110%, oklch(0.8 0.1 178 / 0.1), transparent 60%)",
+              "radial-gradient(60rem 30rem at 80% -10%, oklch(0.85 0.13 80 / 0.14), transparent 60%), radial-gradient(40rem 24rem at 5% 110%, oklch(0.8 0.1 178 / 0.1), transparent 60%)",
           }}
         />
         <div
@@ -89,16 +90,13 @@ export default async function Home() {
         />
 
         <div className="relative mx-auto flex max-w-6xl flex-col gap-10 px-4 pb-24 pt-16 sm:px-6 sm:pt-24">
-          <div className="flex w-fit items-center gap-2 rounded-full border border-sidebar-accent/30 bg-sidebar-accent/10 px-3 py-1.5 text-xs font-medium text-sidebar-foreground">
-            <span className="relative flex size-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sidebar-accent/70" />
-              <span className="relative inline-flex size-1.5 rounded-full bg-sidebar-accent" />
-            </span>
+          <div className="flex w-fit items-center gap-2 rounded-full border border-lamp/25 bg-lamp/10 px-3 py-1.5 text-xs font-medium text-lamp">
+            <LettingLamp lit className="size-4" />
             {stats.live} listings live now
           </div>
 
           <div className="flex max-w-3xl flex-col gap-6">
-            <h1 className="text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl">
+            <h1 className="font-display text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl">
               Your next home,{" "}
               <span className="text-sidebar-accent">already lit.</span>
             </h1>
@@ -154,7 +152,7 @@ export default async function Home() {
               <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
                 Browse by type
               </p>
-              <h2 className="text-2xl font-semibold tracking-tight">
+              <h2 className="font-display text-2xl font-semibold tracking-tight">
                 What kind of nest?
               </h2>
             </div>
@@ -187,7 +185,7 @@ export default async function Home() {
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
               Fresh on the board
             </p>
-            <h2 className="text-2xl font-semibold tracking-tight">
+            <h2 className="font-display text-2xl font-semibold tracking-tight">
               Just lit, still available
             </h2>
             <p className="text-sm text-muted-foreground">
@@ -232,7 +230,7 @@ export default async function Home() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
             How it works
           </p>
-          <h2 className="text-2xl font-semibold tracking-tight">
+          <h2 className="font-display text-2xl font-semibold tracking-tight">
             Built for both sides of the lease
           </h2>
         </div>
@@ -316,14 +314,14 @@ export default async function Home() {
             className="pointer-events-none absolute inset-0"
             style={{
               backgroundImage:
-                "radial-gradient(40rem 20rem at 90% 120%, oklch(0.8 0.1 178 / 0.18), transparent 60%)",
+                "radial-gradient(40rem 20rem at 90% 120%, oklch(0.85 0.13 80 / 0.16), transparent 60%)",
             }}
           />
           <div className="relative flex flex-col gap-3">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sidebar-accent">
               Ready to move?
             </p>
-            <h2 className="max-w-lg text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="font-display max-w-lg text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
               Your next address is on the board tonight.
             </h2>
             <p className="max-w-md text-sm leading-6 text-sidebar-foreground/70">

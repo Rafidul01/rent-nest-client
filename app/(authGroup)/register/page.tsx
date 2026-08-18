@@ -2,7 +2,7 @@
 import React from "react";
 import RegisterForm from "../_components/registerForm";
 import Link from "next/link";
-import { Home } from "lucide-react";
+import { LettingLamp } from "@/app/(publicGroup)/_components/LettingLamp";
 
 interface RegisterPageProps {
   searchParams: Promise<{ role?: string }>;
@@ -12,19 +12,19 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
   const { role } = await searchParams;
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
-      <div className="w-full max-w-sm border p-8 rounded-3xl">
-        <div className="mb-8 flex flex-col items-center gap-2 text-center">
+    <div className="flex min-h-screen flex-col items-center justify-center px-4 py-12">
+      <div className="w-full max-w-sm rounded-2xl border bg-card p-8 shadow-sm">
+        <div className="mb-8 flex flex-col items-center gap-3 text-center">
+          <span className="flex size-11 items-center justify-center rounded-xl border bg-sidebar text-lamp">
+            <LettingLamp lit className="size-6" />
+          </span>
           <Link
             href="/"
-            className="mb-2 flex items-center gap-2 text-lg font-semibold"
+            className="font-display text-lg font-semibold tracking-tight"
           >
-            <span className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Home className="size-5" />
-            </span>
             RentNest
           </Link>
-          <h1 className="text-2xl font-semibold tracking-tight text-balance">
+          <h1 className="font-display text-2xl font-semibold tracking-tight text-balance">
             Create your account
           </h1>
           <p className="text-sm text-muted-foreground text-pretty">

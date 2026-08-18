@@ -12,7 +12,7 @@ How the RentNest frontend talks to the backend. Raw endpoint reference lives in 
 | Envelope | Backend returns `{ success, statusCode, message, data }`. Frontend types mirror this via `ApiSuccessResponse<T>` / `ApiErrorResponse` in `app/lib/types.ts`. |
 | Validation | Zod schemas in `app/lib/schemas.ts`; field errors mapped by `toFieldErrors` and surfaced in forms. |
 | Mutations | Server actions return a `{ success, message, errorDetails?, fieldErrors? }` state object (never throw). Client shows toasts via `app/lib/action-feedback.ts`. |
-| Reads | Public GETs (`getProperties`, `getPropertyById`, `getReviews`) throw on error → caught by segment `error.tsx`/`notFound()`. Dashboard GETs return `[]` on a bad response (defensive). |
+| Reads | Public GETs are defensive: `getProperties` returns `[]` on a bad response (the API reports 404 "Properties not found" for no-match filters, which must render the empty state, not crash); `getPropertyById`/`getReviews` catch errors and `notFound()`/`[]`. Dashboard GETs return `[]` on a bad response (defensive). |
 | Redirects | After success, client components call `router.push` / `router.refresh`; server pages use `redirect()` / `notFound()`. |
 
 ## Auth
@@ -77,13 +77,14 @@ Stripe `success_url` / `cancel_url` point at the **frontend** origin. The backen
 | Users | `GET /api/admin/users` (`getAdminUsers`) + `PATCH /api/admin/users/:id` (`updateUserStatus`) | Ban/unban in `BanButton`. |
 | Properties | `GET /api/properties` (`getAdminProperties`) | Backend has no `/api/admin/properties`; list is unfiltered. |
 | Rentals | `GET /api/admin/rentals` (`getAdminRentals`) | Also fetches users + properties and joins client-side to render names/images. |
+| Categories | `GET /api/categories` (`getAdminCategories`) + `POST /api/categories/create` (`createCategory`) | ADMIN-only create (name ≥ 2 chars, optional description; duplicate name → 409). New categories appear automatically in the landlord `PropertyForm` and browse `FilterStrip`. |
 
 ## Response-shape notes / gotchas
 
 - `GET /api/rentals` should `include: { review: true }` (tasklist item) so the "already reviewed" check `!r.review` in `getEligibleRental` works. `RentalRequest.review?: Review | null` is typed in `app/lib/types.ts`.
 - List endpoints: `getMyRentals` and `getMyPayments` currently throw on `!res.ok` — verify the backend returns `200` with `data: []` (not `404`) for empty lists, or patch them to the defensive `[]` pattern used by the admin/landlord GETs.
 - `GET /api/admin/users/:id` PATCH response includes `password` (backend) — the frontend only reads `status`/`success`.
-- Images: remote hosts must be listed in `images.remotePatterns` in `next.config.ts` (currently `encrypted-tbn0.gstatic.com`, `images.unsplash.com`).
+- Images: `next.config.ts` sets `images.unoptimized: true` and wildcard `remotePatterns` for `http`/`https`, so property image URLs work from **any** host without whitelisting.
 
 ## Adding a new feature
 
