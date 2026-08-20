@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { LettingLamp } from "@/app/(publicGroup)/_components/LettingLamp";
 
 interface PageHeaderProps {
   eyebrow?: string;
@@ -16,11 +17,12 @@ export function PageHeader({
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
       {eyebrow && (
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+        <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+          <LettingLamp lit={false} className="size-3.5" />
           {eyebrow}
         </p>
       )}
-      <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+      <h1 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
         {title}
       </h1>
       {description && (

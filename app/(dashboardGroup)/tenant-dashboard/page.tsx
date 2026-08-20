@@ -8,7 +8,6 @@ import {
   MoveUpRight,
   Wallet,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,6 +21,7 @@ import { getMyPayments } from "./_actions/getMyPayments";
 import { getMyRentals } from "./_actions/getMyRentals";
 import { RentalRequest } from "@/app/lib/types";
 import RequestStatusBadge from "../_components/RequestStatusBadge";
+import { DashboardHero } from "../_components/DashboardHero";
 
 const statCards = [
   {
@@ -82,31 +82,16 @@ export default async function TenantDashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <section className="relative overflow-hidden rounded-2xl border bg-primary px-5 py-6 text-primary-foreground shadow-sm sm:px-8 sm:py-8">
-        <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex max-w-xl flex-col gap-3">
-            <Badge className="w-fit border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/15">
-              Tenant dashboard
-            </Badge>
-            <div className="flex flex-col gap-2">
-              <h1 className="text-balance text-2xl font-semibold tracking-tight sm:text-3xl">
-                Your rental journey, at a glance.
-              </h1>
-              <p className="max-w-lg text-pretty text-sm leading-6 text-primary-foreground/75">
-                Track applications, manage active homes, and stay on top of
-                every payment in one calm place.
-              </p>
-            </div>
-          </div>
-
-          <Button asChild variant="secondary" className="w-fit">
-            <Link href="/properties">
-              Explore homes
-              <MoveUpRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
-      </section>
+      <DashboardHero
+        eyebrow="Tenant desk"
+        title="Your rental journey, at a glance."
+        description="Track applications, manage active homes, and stay on top of every payment in one calm place."
+        action={{
+          label: "Explore homes",
+          href: "/properties",
+          icon: MoveUpRight,
+        }}
+      />
 
       <section
         className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
@@ -143,7 +128,7 @@ export default async function TenantDashboardPage() {
       {(needsPayment.length > 0 || needsReview.length > 0) && (
         <section className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <h2 className="text-xl font-semibold tracking-tight">
+            <h2 className="font-display text-xl font-semibold tracking-tight">
               Needs your attention
             </h2>
             <p className="text-sm text-muted-foreground">
@@ -205,7 +190,7 @@ export default async function TenantDashboardPage() {
       <section className="flex flex-col gap-4">
         <div className="flex items-end justify-between gap-4">
           <div className="flex flex-col gap-1">
-            <h2 className="text-xl font-semibold tracking-tight">
+            <h2 className="font-display text-xl font-semibold tracking-tight">
               Recent requests
             </h2>
             <p className="text-sm text-muted-foreground">

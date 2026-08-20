@@ -39,7 +39,7 @@ export default async function PayPage({ params }: PayPageProps) {
             <Card>
                 <CardContent className="pt-6 space-y-4">
                     <div>
-                        <h2 className="font-semibold text-lg">
+                        <h2 className="font-display font-semibold text-lg">
                             {rentalRequest.property?.title}
                         </h2>
                         <p className="flex items-center text-sm text-muted-foreground gap-1 mt-1">

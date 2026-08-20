@@ -3,7 +3,6 @@ import Link from "next/link";
 import {
   Bath,
   BedDouble,
-  Building2,
   MapPin,
   Pencil,
   Ruler,
@@ -14,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import type { Property } from "@/app/lib/types";
 import { AvailabilityLight } from "./AvailabilityLight";
 import { DeletePropertyButton } from "./DeletePropertyButton";
+import { LettingLamp } from "@/app/(publicGroup)/_components/LettingLamp";
 
 export function PropertyTile({ property }: { property: Property }) {
   return (
@@ -28,7 +28,7 @@ export function PropertyTile({ property }: { property: Property }) {
           />
         ) : (
           <div className="flex h-full items-center justify-center bg-secondary text-muted-foreground">
-            <Building2 className="size-8" aria-hidden="true" />
+            <LettingLamp lit={false} className="size-8" />
           </div>
         )}
         {property.category && (
@@ -40,7 +40,7 @@ export function PropertyTile({ property }: { property: Property }) {
 
       <CardContent className="space-y-3 pt-4">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="truncate font-semibold tracking-tight">
+          <h3 className="font-display truncate font-semibold tracking-tight">
             {property.title}
           </h3>
           <AvailabilityLight available={property.isAvailable} className="shrink-0" />

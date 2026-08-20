@@ -64,7 +64,7 @@ export function DashboardAppBar({ user, navItems }: DashboardAppBarProps) {
           <span className="size-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
           {roleLabel[user.role]}
         </p>
-        <h1 className="truncate text-sm font-semibold tracking-tight md:text-base">
+        <h1 className="font-display truncate text-sm font-semibold tracking-tight md:text-base">
           {active?.label ?? "Dashboard"}
         </h1>
       </div>

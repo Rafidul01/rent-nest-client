@@ -75,7 +75,7 @@ export default async function TenantPaymentsPage() {
 
       <section className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
-          <h2 className="text-xl font-semibold tracking-tight">
+          <h2 className="font-display text-xl font-semibold tracking-tight">
             All transactions
           </h2>
           <p className="text-sm text-muted-foreground">

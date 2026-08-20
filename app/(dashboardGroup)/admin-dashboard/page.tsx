@@ -7,7 +7,6 @@ import {
   KeyRound,
   Users,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,6 +22,7 @@ import { getAdminProperties } from "./_actions/getAdminProperties";
 import { getAdminRentals } from "./_actions/getAdminRentals";
 import { UserRow } from "./_components/UserRow";
 import { RentalRow } from "./_components/RentalRow";
+import { DashboardHero } from "../_components/DashboardHero";
 
 type JoinedRental = Omit<RentalRequest, "property"> & {
   property?: { id: string; title: string; city: string; images?: string[] } | null;
@@ -98,31 +98,15 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <section className="relative overflow-hidden rounded-2xl border bg-primary px-5 py-6 text-primary-foreground shadow-sm sm:px-8 sm:py-8">
-        <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex max-w-xl flex-col gap-3">
-            <Badge className="w-fit border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/15">
-              Admin control room
-            </Badge>
-            <div className="flex flex-col gap-2">
-              <h1 className="text-balance text-2xl font-semibold tracking-tight sm:text-3xl">
-                The whole market, on one board.
-              </h1>
-              <p className="max-w-lg text-pretty text-sm leading-6 text-primary-foreground/75">
-                Keep every member, listing, and lease in check — spot what
-                needs a decision at a glance.
-              </p>
-            </div>
-          </div>
-
-          <Button asChild variant="secondary" className="w-fit">
-            <Link href="/admin-dashboard/users">
-              Review members
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
-      </section>
+      <DashboardHero
+        eyebrow="Admin desk"
+        title="The whole market, on one board."
+        description="Keep every member, listing, and lease in check — spot what needs a decision at a glance."
+        action={{
+          label: "Review members",
+          href: "/admin-dashboard/users",
+        }}
+      />
 
       <section
         className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
@@ -160,7 +144,7 @@ export default async function AdminDashboardPage() {
         <section className="flex flex-col gap-4">
           <div className="flex items-end justify-between gap-4">
             <div className="flex flex-col gap-1">
-              <h2 className="text-xl font-semibold tracking-tight">
+              <h2 className="font-display text-xl font-semibold tracking-tight">
                 Needs a decision
               </h2>
               <p className="text-sm text-muted-foreground">
@@ -194,7 +178,7 @@ export default async function AdminDashboardPage() {
       <section className="flex flex-col gap-4">
         <div className="flex items-end justify-between gap-4">
           <div className="flex flex-col gap-1">
-            <h2 className="text-xl font-semibold tracking-tight">
+            <h2 className="font-display text-xl font-semibold tracking-tight">
               Recent signups
             </h2>
             <p className="text-sm text-muted-foreground">

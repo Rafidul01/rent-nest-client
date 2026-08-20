@@ -7,7 +7,6 @@ import {
   Lamp,
   Plus,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,6 +22,8 @@ import { getLandlordProperties } from "./_actions/getLandlordProperties";
 import { getLandlordRequests } from "./_actions/getLandlordRequests";
 import { DecisionCard } from "./_components/DecisionCard";
 import { AvailabilityLight } from "./_components/AvailabilityLight";
+import { DashboardHero } from "../_components/DashboardHero";
+import { LettingLamp } from "@/app/(publicGroup)/_components/LettingLamp";
 
 type JoinedRequest = Omit<RentalRequest, "property"> & {
   property?: { id: string; title: string; city: string } | null;
@@ -78,31 +79,16 @@ export default async function LandlordDashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <section className="relative overflow-hidden rounded-2xl border bg-primary px-5 py-6 text-primary-foreground shadow-sm sm:px-8 sm:py-8">
-        <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex max-w-xl flex-col gap-3">
-            <Badge className="w-fit border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/15">
-              Landlord dashboard
-            </Badge>
-            <div className="flex flex-col gap-2">
-              <h1 className="text-balance text-2xl font-semibold tracking-tight sm:text-3xl">
-                Your letting desk, at a glance.
-              </h1>
-              <p className="max-w-lg text-pretty text-sm leading-6 text-primary-foreground/75">
-                Keep listings lit, field rental requests, and watch your
-                portfolio fill up.
-              </p>
-            </div>
-          </div>
-
-          <Button asChild variant="secondary" className="w-fit">
-            <Link href="/landlord-dashboard/properties/new">
-              Add property
-              <Plus className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
-      </section>
+      <DashboardHero
+        eyebrow="Landlord desk"
+        title="Your letting desk, at a glance."
+        description="Keep listings lit, field rental requests, and watch your portfolio fill up."
+        action={{
+          label: "Add property",
+          href: "/landlord-dashboard/properties/new",
+          icon: Plus,
+        }}
+      />
 
       <section
         className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
@@ -139,7 +125,7 @@ export default async function LandlordDashboardPage() {
       {pendingRequests.length > 0 && (
         <section className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <h2 className="text-xl font-semibold tracking-tight">
+            <h2 className="font-display text-xl font-semibold tracking-tight">
               Needs your decision
             </h2>
             <p className="text-sm text-muted-foreground">
@@ -157,7 +143,7 @@ export default async function LandlordDashboardPage() {
       <section className="flex flex-col gap-4">
         <div className="flex items-end justify-between gap-4">
           <div className="flex flex-col gap-1">
-            <h2 className="text-xl font-semibold tracking-tight">
+            <h2 className="font-display text-xl font-semibold tracking-tight">
               Portfolio snapshot
             </h2>
             <p className="text-sm text-muted-foreground">
@@ -176,10 +162,10 @@ export default async function LandlordDashboardPage() {
           <Card className="border-dashed">
             <CardContent className="flex flex-col items-center justify-center gap-3 py-12 text-center">
               <div className="flex size-12 items-center justify-center rounded-xl bg-muted text-muted-foreground">
-                <Building2 aria-hidden="true" />
+                <LettingLamp lit={false} className="size-6" />
               </div>
               <div className="flex flex-col gap-1">
-                <p className="font-medium">No properties listed yet</p>
+                <p className="font-medium">No lamps lit yet</p>
                 <p className="text-sm text-muted-foreground">
                   List your first property to start fielding requests.
                 </p>
@@ -199,14 +185,8 @@ export default async function LandlordDashboardPage() {
                   <div key={p.id}>
                     <div className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex min-w-0 items-center gap-3">
-                        <div
-                          className={
-                            p.isAvailable
-                              ? "flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary"
-                              : "flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground"
-                          }
-                        >
-                          <Lamp aria-hidden="true" />
+                        <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted">
+                          <LettingLamp lit={p.isAvailable} className="size-5" />
                         </div>
                         <div className="flex min-w-0 flex-col gap-1">
                           <p className="truncate font-medium">{p.title}</p>

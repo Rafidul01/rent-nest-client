@@ -17,6 +17,7 @@ import { getCategories } from "./properties/_actions/getCategories";
 import PropertyCard from "./properties/_components/PropertyCard";
 import Marquee from "./_components/Marquee";
 import { PostListingButton } from "./_components/PostListingButton";
+import { HeroSpotlight } from "./_components/HeroSpotlight";
 
 const safe = async <T,>(run: () => Promise<T>): Promise<T | null> => {
   try {
@@ -88,6 +89,8 @@ export default async function Home() {
             backgroundSize: "3rem 3rem",
           }}
         />
+
+        <HeroSpotlight />
 
         <div className="relative mx-auto flex max-w-6xl flex-col gap-10 px-4 pb-24 pt-16 sm:px-6 sm:pt-24">
           <div className="flex w-fit items-center gap-2 rounded-full border border-lamp/25 bg-lamp/10 px-3 py-1.5 text-xs font-medium text-lamp">
