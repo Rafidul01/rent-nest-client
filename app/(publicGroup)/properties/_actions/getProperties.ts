@@ -1,5 +1,6 @@
 
 import { ApiSuccessResponse, Property } from "@/app/lib/types";
+import { fetchEnvelopeOrEmpty } from "@/app/lib/fetch-api";
 
 interface GetPropertiesParams {
     city?: string;
@@ -23,18 +24,10 @@ export const getProperties = async (
         if (value) params.append(key, value);
     });
 
-    const res = await fetch(
+    return fetchEnvelopeOrEmpty<Property>(
         `${process.env.NEXT_PUBLIC_API_URL}/api/properties?${params.toString()}`,
         {
             cache: "no-store",
         }
     );
-
-    const json = await res.json();
-
-    if (!res.ok) {
-        return { success: false, message: json.message || "Failed to fetch properties", data: [] };
-    }
-
-    return json as ApiSuccessResponse<Property[]>;
 };

@@ -1,4 +1,3 @@
-// app/(dashboardGroup)/landlord-dashboard/_components/AvailabilityLight.tsx
 import { cn } from "@/lib/utils";
 import { LettingLamp } from "@/app/(publicGroup)/_components/LettingLamp";
 

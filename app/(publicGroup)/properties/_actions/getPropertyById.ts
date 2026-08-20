@@ -1,10 +1,11 @@
 
 import { ApiSuccessResponse, Property } from "@/app/lib/types";
+import { fetchApi } from "@/app/lib/fetch-api";
 
 export const getPropertyById = async (
     id: string
 ): Promise<ApiSuccessResponse<Property>> => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/properties/${id}`, {
+    const res = await fetchApi(`${process.env.NEXT_PUBLIC_API_URL}/api/properties/${id}`, {
         cache: "no-store",
     });
 

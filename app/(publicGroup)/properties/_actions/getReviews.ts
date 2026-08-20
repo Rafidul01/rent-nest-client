@@ -1,15 +1,8 @@
 import { Review } from "@/app/lib/types";
+import { fetchList } from "@/app/lib/fetch-api";
 
 export const getReviews = async (): Promise<Review[]> => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews`, {
+  return fetchList<Review>(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews`, {
     cache: "no-store",
   });
-
-  const json = await res.json().catch(() => null);
-
-  if (!res.ok || !json || !Array.isArray(json.data)) {
-    return [];
-  }
-
-  return json.data as Review[];
 };

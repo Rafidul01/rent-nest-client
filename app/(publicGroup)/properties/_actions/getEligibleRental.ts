@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { RentalRequest } from "@/app/lib/types";
+import { fetchApi } from "@/app/lib/fetch-api";
 
 export const getEligibleRental = async (
   propertyId: string
@@ -9,7 +10,7 @@ export const getEligibleRental = async (
   try {
     const cookieStore = await cookies();
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/rentals`, {
+    const res = await fetchApi(`${process.env.NEXT_PUBLIC_API_URL}/api/rentals`, {
       headers: {
         Cookie: cookieStore.toString(),
       },

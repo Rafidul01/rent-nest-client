@@ -1,11 +1,12 @@
 import { getUser } from "@/service/getUser";
 import { Navbar } from "@/app/components/shared/navbar";
 import { Footer } from "@/app/components/shared/footer";
+import { fetchApi } from "@/app/lib/fetch-api";
 import type { Property } from "@/app/lib/types";
 
 const getLiveCount = async (): Promise<number> => {
   try {
-    const res = await fetch(
+    const res = await fetchApi(
       `${process.env.NEXT_PUBLIC_API_URL}/api/properties`,
       { next: { revalidate: 60 } },
     );

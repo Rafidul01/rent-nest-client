@@ -1,4 +1,3 @@
-// app/(dashboardGroup)/tenant-dashboard/_actions/createPayment.ts
 "use server";
 
 import { cookies } from "next/headers";

@@ -91,17 +91,27 @@ export function PropertyForm({ categories, property }: PropertyFormProps) {
     const payload = parsed.data;
     setPending(true);
 
-    const result = property
-      ? await updateProperty(property.id, payload)
-      : await createProperty(payload);
+    let result;
+    try {
+      result = property
+        ? await updateProperty(property.id, payload)
+        : await createProperty(payload);
+    } catch {
+      setPending(false);
+      toast.error("Something went wrong. Please try again.");
+      return;
+    }
 
     setPending(false);
 
-    toastActionResult(result);
+    toastActionResult(result, {
+      successMessage: editing
+        ? "Property updated successfully"
+        : "Listing created successfully!",
+    });
 
     if (result.success) {
       router.push("/landlord-dashboard/properties");
-      router.refresh();
     }
   };
 

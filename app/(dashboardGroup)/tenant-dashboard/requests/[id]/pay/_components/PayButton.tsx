@@ -1,4 +1,3 @@
-// app/(dashboardGroup)/tenant-dashboard/requests/[id]/pay/_components/PayButton.tsx
 "use client";
 
 import { useState } from "react";

@@ -1,4 +1,3 @@
-// app/(dashboardGroup)/landlord-dashboard/_actions/updateProperty.ts
 "use server";
 
 import { cookies } from "next/headers";
