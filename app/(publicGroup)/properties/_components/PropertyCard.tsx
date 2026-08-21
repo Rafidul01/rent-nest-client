@@ -27,7 +27,7 @@ export default function PropertyCard({ property }: { property: Property }) {
               No image yet
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
           {property.category && (
             <span className="absolute left-2.5 top-2.5 rounded-full border border-white/15 bg-black/35 px-2.5 py-0.5 text-xs font-medium text-white backdrop-blur">
